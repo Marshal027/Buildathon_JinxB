@@ -1,5 +1,5 @@
 {
-  "name": "SmartFactory 360°",
+  "name": "opp sync",
   "description": "An AI-powered smart factory management platform with predictive maintenance, 3D/floor viewer, real-time alerts, and maintenance chatbot.",
   "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

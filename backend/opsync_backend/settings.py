@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'tickets',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import http from 'http';
 import url from 'url';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -241,14 +242,42 @@ app.get('/api/workers/locations', (req, res) => {
   res.json(Object.entries(workerLocations).map(([id, val]) => ({ id, ...val })));
 });
 
-app.get('/api/tickets', (req, res) => {
-  res.json(tickets);
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/tickets/');
+    if (response.ok) {
+      const djangoTickets = await response.json();
+      const mappedTickets = djangoTickets.map(t => ({
+        id: t.ticket_id,
+        machineId: t.machine_id,
+        machineName: t.machine_name,
+        reportedBy: t.reported_by,
+        issueDescription: t.issue_description,
+        severity: t.severity,
+        status: t.status,
+        createdAt: t.created_at,
+        checklist: t.checklist || []
+      }));
+      res.json(mappedTickets);
+    } else {
+      res.json(tickets);
+    }
+  } catch (err) {
+    console.error('Error fetching tickets from Django:', err);
+    res.json(tickets);
+  }
 });
 
-app.post('/api/tickets', (req, res) => {
+app.post('/api/tickets', async (req, res) => {
   const { machineId, machineName, reportedBy, issueDescription, severity } = req.body;
+  const ticketId = `TKT-${Math.floor(8800 + Math.random() * 1100)}`;
+  const defaultChecklist = [
+    { text: 'Diagnostics review', done: false },
+    { text: 'Resolve underlying issues', done: false }
+  ];
+  
   const newTicket = {
-    id: `TKT-${Math.floor(8800 + Math.random() * 1100)}`,
+    id: ticketId,
     machineId,
     machineName: machineName || (machines.find(m => m.id === machineId)?.name || 'Unknown Machine'),
     reportedBy: reportedBy || 'System Watchdog',
@@ -256,25 +285,117 @@ app.post('/api/tickets', (req, res) => {
     severity: severity || 'complex',
     status: 'open',
     createdAt: new Date().toISOString(),
-    checklist: [
-      { text: 'Diagnostics review', done: false },
-      { text: 'Resolve underlying issues', done: false }
-    ]
+    checklist: defaultChecklist
   };
-  tickets.unshift(newTicket);
-  broadcast({
-    type: 'ticket.created',
-    payload: newTicket
-  });
-  res.json(newTicket);
+
+  try {
+    const djangoPayload = {
+      ticket_id: newTicket.id,
+      machine_id: newTicket.machineId,
+      machine_name: newTicket.machineName,
+      reported_by: newTicket.reportedBy,
+      issue_description: newTicket.issueDescription,
+      severity: newTicket.severity,
+      status: newTicket.status,
+      checklist: newTicket.checklist
+    };
+
+    const response = await fetch('http://127.0.0.1:8000/api/tickets/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(djangoPayload)
+    });
+
+    if (response.ok) {
+      const createdTkt = await response.json();
+      const mappedTkt = {
+        id: createdTkt.ticket_id,
+        machineId: createdTkt.machine_id,
+        machineName: createdTkt.machine_name,
+        reportedBy: createdTkt.reported_by,
+        issueDescription: createdTkt.issue_description,
+        severity: createdTkt.severity,
+        status: createdTkt.status,
+        createdAt: createdTkt.created_at,
+        checklist: createdTkt.checklist || []
+      };
+      
+      tickets.unshift(mappedTkt);
+      broadcast({
+        type: 'ticket.created',
+        payload: mappedTkt
+      });
+      res.json(mappedTkt);
+    } else {
+      tickets.unshift(newTicket);
+      broadcast({
+        type: 'ticket.created',
+        payload: newTicket
+      });
+      res.json(newTicket);
+    }
+  } catch (err) {
+    console.error('Error saving ticket to Django:', err);
+    tickets.unshift(newTicket);
+    broadcast({
+      type: 'ticket.created',
+      payload: newTicket
+    });
+    res.json(newTicket);
+  }
 });
 
-app.patch('/api/tickets/:id', (req, res) => {
+app.patch('/api/tickets/:id', async (req, res) => {
   const { id } = req.params;
   const update = req.body;
+  
   tickets = tickets.map(t => t.id === id ? { ...t, ...update } : t);
-  const updatedTicket = tickets.find(t => t.id === id);
-  res.json(updatedTicket);
+  const updatedLocalTicket = tickets.find(t => t.id === id);
+
+  try {
+    const getRes = await fetch('http://127.0.0.1:8000/api/tickets/');
+    if (getRes.ok) {
+      const djangoTickets = await getRes.json();
+      const targetTkt = djangoTickets.find(t => t.ticket_id === id);
+      if (targetTkt) {
+        const djangoUpdate = {};
+        if (update.machineId !== undefined) djangoUpdate.machine_id = update.machineId;
+        if (update.machineName !== undefined) djangoUpdate.machine_name = update.machineName;
+        if (update.reportedBy !== undefined) djangoUpdate.reported_by = update.reportedBy;
+        if (update.issueDescription !== undefined) djangoUpdate.issue_description = update.issueDescription;
+        if (update.severity !== undefined) djangoUpdate.severity = update.severity;
+        if (update.status !== undefined) djangoUpdate.status = update.status;
+        if (update.checklist !== undefined) djangoUpdate.checklist = update.checklist;
+
+        const patchRes = await fetch(`http://127.0.0.1:8000/api/tickets/${targetTkt.id}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(djangoUpdate)
+        });
+
+        if (patchRes.ok) {
+          const patchData = await patchRes.json();
+          const mappedTkt = {
+            id: patchData.ticket_id,
+            machineId: patchData.machine_id,
+            machineName: patchData.machine_name,
+            reportedBy: patchData.reported_by,
+            issueDescription: patchData.issue_description,
+            severity: patchData.severity,
+            status: patchData.status,
+            createdAt: patchData.created_at,
+            checklist: patchData.checklist || []
+          };
+          res.json(mappedTkt);
+          return;
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error patching ticket in Django:', err);
+  }
+  
+  res.json(updatedLocalTicket);
 });
 
 app.post('/api/alerts/sos', (req, res) => {
@@ -314,12 +435,33 @@ app.post('/api/notifications/broadcast', (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/dashboard/summary', (req, res) => {
+app.get('/api/dashboard/summary', async (req, res) => {
+  let currentTickets = tickets;
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/tickets/');
+    if (response.ok) {
+      const djangoTickets = await response.json();
+      currentTickets = djangoTickets.map(t => ({
+        id: t.ticket_id,
+        machineId: t.machine_id,
+        machineName: t.machine_name,
+        reportedBy: t.reported_by,
+        issueDescription: t.issue_description,
+        severity: t.severity,
+        status: t.status,
+        createdAt: t.created_at,
+        checklist: t.checklist || []
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching tickets for summary:', err);
+  }
+
   const total = machines.length;
   const online = machines.filter(m => m.status === 'online' || m.status === 'warning').length;
   const activeWorkers = Object.keys(workerLocations).length;
-  const openCount = tickets.filter(t => t.status !== 'resolved').length;
-  const criticalCount = tickets.filter(t => t.status !== 'resolved' && t.severity === 'critical').length;
+  const openCount = currentTickets.filter(t => t.status !== 'resolved').length;
+  const criticalCount = currentTickets.filter(t => t.status !== 'resolved' && t.severity === 'critical').length;
 
   const summary = {
     productivity: 94,
@@ -330,6 +472,205 @@ app.get('/api/dashboard/summary', (req, res) => {
     criticalTickets: criticalCount
   };
   res.json({ summary, liveAlerts });
+});
+
+// --- EMAIL SYSTEM PROXIES ---
+app.get('/api/emails', async (req, res) => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/emails/');
+    if (response.ok) {
+      let data = await response.json();
+      
+      // If the email table in Django is empty, seed it with initial emails!
+      if (data.length === 0) {
+        const initialEmails = [
+          {
+            sender: 'Admin Supervisor',
+            sender_role: 'manager',
+            recipient: 'sarah.miller@opsync.com',
+            subject: 'Mandatory Safety Inspection - Shift A',
+            body: 'Team, please ensure that all Sync-Engine-9000 units are checked for thermal stability before starting the 20:00 shift. Refer to the troubleshooting docs if the warning LED flashes. We must keep our compliance scores above 95% this quarter.',
+            timestamp: '10:42 AM',
+            date: 'Today',
+            priority: 'high',
+            read: false,
+            folder: 'inbox'
+          },
+          {
+            sender: 'Sarah Miller',
+            sender_role: 'engineer',
+            recipient: 'manager@opsync.com',
+            subject: 'Sync-Engine-9000 calibration complete',
+            body: 'Just completed the alignment calibration on unit 3. The throughput is now steady at 98.4%. Please monitor the database connection. The secondary logger has been rebooted as well.',
+            timestamp: '08:15 AM',
+            date: 'Today',
+            priority: 'normal',
+            read: true,
+            folder: 'inbox'
+          },
+          {
+            sender: 'Automated System Monitor',
+            sender_role: 'system',
+            recipient: 'engineers@opsync.com',
+            subject: '[WARNING] Database Connection Timeout',
+            body: 'Alert: DB Connection latency exceeded 500ms on server node-4. Falling back to primary replica. Investigation ticket raised. System operations remain nominal but redundancy is temporarily degraded.',
+            timestamp: 'Yesterday',
+            date: 'Yesterday',
+            priority: 'critical',
+            read: false,
+            folder: 'inbox'
+          },
+          {
+            sender: 'Operator Dave',
+            sender_role: 'operator',
+            recipient: 'manager@opsync.com',
+            subject: 'Refuse Bin Overflow on Row D',
+            body: 'Row D bin is full of metal filings. Requesting the facility team to clear it during the shift handover. Thanks!',
+            timestamp: 'Yesterday',
+            date: 'Yesterday',
+            priority: 'low',
+            read: true,
+            folder: 'inbox'
+          }
+        ];
+
+        for (const email of initialEmails) {
+          await fetch('http://127.0.0.1:8000/api/emails/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(email)
+          });
+        }
+        
+        // Re-fetch seeded emails
+        const refetch = await fetch('http://127.0.0.1:8000/api/emails/');
+        data = await refetch.json();
+      }
+
+      // Map DRF model fields to frontend structure
+      const mapped = data.map(e => ({
+        id: e.id,
+        sender: e.sender,
+        senderRole: e.sender_role,
+        recipient: e.recipient,
+        subject: e.subject,
+        body: e.body,
+        timestamp: e.timestamp,
+        date: e.date,
+        priority: e.priority,
+        read: e.read,
+        folder: e.folder
+      }));
+      res.json(mapped);
+    } else {
+      res.status(response.status).json({ error: 'Failed to fetch emails from Django backend' });
+    }
+  } catch (err) {
+    console.error('Error fetching emails from Django:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/emails', async (req, res) => {
+  const { sender, senderRole, recipient, subject, body, timestamp, date, priority, read, folder } = req.body;
+  const djangoPayload = {
+    sender: sender || 'Admin Supervisor',
+    sender_role: senderRole || 'manager',
+    recipient: recipient || 'staff@opsync.com',
+    subject: subject || 'No Subject',
+    body: body || '',
+    timestamp: timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    date: date || 'Today',
+    priority: priority || 'normal',
+    read: read || false,
+    folder: folder || 'inbox'
+  };
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/emails/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(djangoPayload)
+    });
+
+    if (response.ok) {
+      const createdEmail = await response.json();
+      res.json({
+        id: createdEmail.id,
+        sender: createdEmail.sender,
+        senderRole: createdEmail.sender_role,
+        recipient: createdEmail.recipient,
+        subject: createdEmail.subject,
+        body: createdEmail.body,
+        timestamp: createdEmail.timestamp,
+        date: createdEmail.date,
+        priority: createdEmail.priority,
+        read: createdEmail.read,
+        folder: createdEmail.folder
+      });
+    } else {
+      res.status(response.status).json({ error: 'Failed to save email to Django backend' });
+    }
+  } catch (err) {
+    console.error('Error creating email in Django:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.patch('/api/emails/:id', async (req, res) => {
+  const { id } = req.params;
+  const { read, folder } = req.body;
+  
+  const djangoPayload = {};
+  if (read !== undefined) djangoPayload.read = read;
+  if (folder !== undefined) djangoPayload.folder = folder;
+
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/emails/${id}/`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(djangoPayload)
+    });
+
+    if (response.ok) {
+      const updatedEmail = await response.json();
+      res.json({
+        id: updatedEmail.id,
+        sender: updatedEmail.sender,
+        senderRole: updatedEmail.sender_role,
+        recipient: updatedEmail.recipient,
+        subject: updatedEmail.subject,
+        body: updatedEmail.body,
+        timestamp: updatedEmail.timestamp,
+        date: updatedEmail.date,
+        priority: updatedEmail.priority,
+        read: updatedEmail.read,
+        folder: updatedEmail.folder
+      });
+    } else {
+      res.status(response.status).json({ error: 'Failed to update email in Django' });
+    }
+  } catch (err) {
+    console.error('Error updating email in Django:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/emails/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/emails/${id}/`, {
+      method: 'DELETE'
+    });
+    if (response.ok) {
+      res.json({ success: true });
+    } else {
+      res.status(response.status).json({ error: 'Failed to delete email from Django' });
+    }
+  } catch (err) {
+    console.error('Error deleting email from Django:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.get('/api/chatbot/sessions', (req, res) => {
@@ -379,111 +720,118 @@ app.post('/api/chatbot/message', async (req, res) => {
   };
   session.messages.push(userMsg);
 
-  // Ready system instruction list of machines
-  const machineListStr = machines.map(m => `${m.name} (ID: ${m.id}, Zone: ${m.locationZone}, Health Score: ${m.healthScore}, Status: ${m.status})`).join('\n');
+  // Read troubleshooting docs from markdown file dynamically
+  const troubleshootingDocsPath = path.join(process.cwd(), 'frontend', 'Opsync', 'public', 'troubleshooting_docs.md');
+  let troubleshootingDocs = '';
+  try {
+    troubleshootingDocs = fs.readFileSync(troubleshootingDocsPath, 'utf8');
+  } catch (err) {
+    console.error('Could not read troubleshooting docs:', err);
+  }
 
-  const systemInstruction = `You are SmartFactory Assistant, an AI maintenance helper.
-Available machines on the factory floor:
-${machineListStr}
+  const systemInstruction = `You are opp sync Assistant, an AI maintenance helper.
+You must ONLY answer questions using the information provided in the troubleshooting guide below.
+Do NOT use any other knowledge. Do NOT make up answers.
+If the answer to the user's question cannot be found or clearly inferred from the troubleshooting guide, you MUST respond exactly with: "I cannot answer this question based on the troubleshooting guide." and nothing else.
 
-When a worker reports an issue:
-1. Identify the machine and failure pattern
-2. Classify severity: SIMPLE (worker can self-fix) | MODERATE (supervisor needed) | COMPLEX (engineer required)
-3. SIMPLE: return numbered steps (max 5). Start response with "SEVERITY: SIMPLE"
-4. COMPLEX: brief diagnosis only. Start response with "SEVERITY: COMPLEX"
-Safety first. Be concise. Never advise actions that risk physical harm.`;
+Troubleshooting Guide:
+${troubleshootingDocs}`;
 
   try {
     let aiResponseText = '';
     const key = process.env.GEMINI_API_KEY;
+    let useFallback = !key || key === 'MY_GEMINI_API_KEY';
 
-    if (!key || key === 'MY_GEMINI_API_KEY') {
-      // Offline fallback simulator to respond instantly to instructions without crash
-      const lower = message.toLowerCase();
-      if (lower.includes('axis 4') || lower.includes('temperature') || lower.includes('sensor')) {
-        aiResponseText = `SEVERITY: COMPLEX\n\nThermal anomaly detected on Spindle Bearing Assembly of CNC Axis 4. Friction coefficients are rising rapidly. Immediate inspection and possible bearing replacement required to avoid mechanical seizure. I will generate a formal Maintenance ticket for you.`;
-      } else {
-        aiResponseText = `SEVERITY: SIMPLE\n\n1. Locate standard calibration tool on shelf.\n2. Set alignment mode to automatic.\n3. Calibrate sensory reference lines.\n4. Complete and save logs.\n5. Verify nominal green indicator lights.`;
-      }
-    } else {
-      const modelName = 'gemini-3.5-flash';
-      const promptParts = [];
-
-      // Append image if provided in base64
-      if (image) {
-        // e.g. data:image/png;base64,iVBORw...
-        const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        if (matches && matches.length === 3) {
-          promptParts.push({
-            inlineData: {
-              data: matches[2],
-              mimeType: matches[1]
+    if (!useFallback) {
+      try {
+        const payload = {
+          systemInstruction: {
+            parts: [{ text: systemInstruction }]
+          },
+          contents: [
+            {
+              parts: []
             }
-          });
+          ],
+          generationConfig: {
+            temperature: 0.2
+          }
+        };
+
+        if (image) {
+          const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+          if (matches && matches.length === 3) {
+            payload.contents[0].parts.push({
+              inlineData: {
+                data: matches[2],
+                mimeType: matches[1]
+              }
+            });
+          }
         }
+
+        payload.contents[0].parts.push({ text: message });
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-goog-api-key': key
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          aiResponseText = resData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        } else {
+          console.warn(`Gemini API returned status ${response.status}. Falling back to local troubleshooting matcher.`);
+          useFallback = true;
+        }
+      } catch (err) {
+        console.error('Gemini API call failed, falling back to local matcher:', err);
+        useFallback = true;
       }
-
-      promptParts.push({ text: message });
-
-      const response = await getGemini().models.generateContent({
-        model: modelName,
-        contents: promptParts,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.7
-        }
-      });
-      aiResponseText = response.text || '';
     }
 
-    // Determine severity from response
-    let severity = 'SIMPLE';
-    if (aiResponseText.includes('SEVERITY: COMPLEX')) {
-      severity = 'COMPLEX';
-    } else if (aiResponseText.includes('SEVERITY: MODERATE')) {
-      severity = 'MODERATE';
+    if (useFallback) {
+      // Offline fallback simulator to respond instantly based on troubleshooting guide
+      const lower = message.toLowerCase();
+      if (lower.includes('blinking red') || lower.includes('status led') || lower.includes('red led')) {
+        aiResponseText = "The blinking red LED indicates a database connection timeout. Check if the database instance is running and verify the login credentials in the configuration file.";
+      } else if (lower.includes('restart')) {
+        aiResponseText = "Press and hold the manual power button on the front panel for 5 seconds, or execute the command `opsync restart` from the admin terminal.";
+      } else if (lower.includes('disk full') || lower.includes('clean-logs') || lower.includes('clean logs')) {
+        aiResponseText = "Clean up log files by running the clean command: `opsync clean-logs`. You can also configure log rotation in `opsync.config.json`.";
+      } else if (lower.includes('conflict') || lower.includes('sync conflict')) {
+        aiResponseText = "Access the conflict resolution panel, choose between 'last-write-wins' or manual merge. You can also specify the default policy in the schema configuration under `conflictResolution`.";
+      } else if (lower.includes('solid blue') || lower.includes('blue light')) {
+        aiResponseText = "A solid blue light indicates that the machine is successfully connected, operational, and actively syncing tables.";
+      } else if (lower.includes('mark franco')) {
+        aiResponseText = "Mark Franco is the owner of Sync-Engine-9000 machine.";
+      } else if (lower.includes('omkar') || lower.includes('pedenakar')) {
+        aiResponseText = "Mark Fenandes is the engineer of Sync-Engine-9000 machine.";
+      } else {
+        aiResponseText = "I cannot answer this question based on the troubleshooting guide.";
+      }
     }
 
-    let createdTicketId;
-
-    if (severity === 'COMPLEX') {
-      // Auto-create ticket
-      const newTkt = {
-        id: `TKT-${Math.floor(8800 + Math.random() * 1100)}`,
-        machineId: 'M-402',
-        machineName: 'CNC Axis 4',
-        reportedBy: 'AI Chatbot triage',
-        issueDescription: message,
-        severity: 'critical',
-        status: 'open',
-        aiAssessment: aiResponseText,
-        createdAt: new Date().toISOString(),
-        checklist: [
-          { text: 'Diagnostics review', done: false },
-          { text: 'Resolve Axis 4 temperature spill', done: false }
-        ]
-      };
-      tickets.unshift(newTkt);
-      createdTicketId = newTkt.id;
-
-      broadcast({
-        type: 'ticket.created',
-        payload: newTkt
-      });
-    }
+    const cannotAnswer = aiResponseText.toLowerCase().includes("cannot answer this question") || 
+                         aiResponseText.toLowerCase().includes("cannot answer based on the troubleshooting guide");
 
     const aiMsg = {
       id: Math.random().toString(),
       role: 'assistant',
       content: aiResponseText,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString(),
+      cannot_answer: cannotAnswer
     };
     session.messages.push(aiMsg);
 
     res.json({
       response_text: aiResponseText,
-      severity,
-      ticket_id: createdTicketId
+      cannot_answer: cannotAnswer
     });
 
   } catch (err) {
@@ -534,7 +882,7 @@ async function startServer() {
   }
 
   server.listen(PORT, '0.0.0.0', () => {
-    console.log(`SmartFactory backend running at http://0.0.0.0:${PORT}`);
+    console.log(`opp sync backend running at http://0.0.0.0:${PORT}`);
   });
 }
 

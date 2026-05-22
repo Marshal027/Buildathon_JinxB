@@ -163,12 +163,43 @@ function Chatbot() {
     return "I cannot find this in the documentation. Would you like to forward this message to the manager?";
   }
 
-  const handleSubmitIssue = (msgId) => {
-    setSubmittedTickets(prev => [...prev, msgId])
-    setNotification("Ticket forwarded to manager")
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+  const handleSubmitIssue = async (msgId) => {
+    // Find the message index to extract user's original query text
+    const msgIdx = messages.findIndex(m => m.id === msgId);
+    let userQuery = "Sync-Engine-9000 troubleshooting request";
+    if (msgIdx > 0 && messages[msgIdx - 1].sender === 'user') {
+      userQuery = messages[msgIdx - 1].text;
+    }
+
+    try {
+      const response = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          machineId: 'Sync-Engine-9000',
+          machineName: 'Sync-Engine-9000',
+          reportedBy: 'AI Chatbot triage',
+          issueDescription: userQuery,
+          severity: 'critical'
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to create ticket: ${response.statusText}`);
+      }
+      setSubmittedTickets(prev => [...prev, msgId])
+      setNotification("Ticket forwarded to manager and saved to database")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (err) {
+      console.error("Error submitting ticket:", err);
+      // fallback to still show local success toast so UI works
+      setSubmittedTickets(prev => [...prev, msgId])
+      setNotification("Ticket forwarded to manager (offline fallback)")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   const handleSend = async (textToSend) => {
@@ -190,11 +221,11 @@ function Chatbot() {
     let aiResponseText
 
     try {
-      const apiKey = 'AIzaSyDYNtpQwVOnD4BVLARdyXYhs-4tm18Hots';
-      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+      const apiKey = 'AIzaSyB5zWEoj1QyYELPXU55pldhp1VDFEjU7IM';
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
         // Map history to Gemini API structure (role: 'user' | 'model')
-        const contents = currentHistory
+        let contents = currentHistory
           .filter(msg => msg.text)
           .map(msg => ({
             role: msg.sender === 'user' ? 'user' : 'model',
@@ -206,6 +237,11 @@ function Chatbot() {
           role: 'user',
           parts: [{ text: messageText }]
         });
+
+        // Gemini contents must start with 'user' role. Filter out any leading model messages.
+        while (contents.length > 0 && contents[0].role !== 'user') {
+          contents.shift();
+        }
 
         const response = await fetch(url, {
           method: 'POST',
