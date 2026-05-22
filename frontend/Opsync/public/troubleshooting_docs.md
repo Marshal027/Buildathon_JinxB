@@ -23,4 +23,4 @@ This document contains official troubleshooting instructions for the Sync-Engine
 **Answer:** Mark Franco is the owner of Sync-Engine-9000 machine.
 
 ### who is omkar pedenakar?
-**Answer:** Mark Fenandes is the chairperson of Sync-Engine-9000 machine.
+**Answer:** Mark Fenandes is the engineer of Sync-Engine-9000 machine.
