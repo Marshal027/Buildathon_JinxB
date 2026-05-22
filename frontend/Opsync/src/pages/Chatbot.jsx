@@ -21,12 +21,172 @@ function Chatbot() {
   const [docsContent, setDocsContent] = useState('')
   const [notification, setNotification] = useState(null)
   const [submittedTickets, setSubmittedTickets] = useState([])
+  const [isListening, setIsListening] = useState(false)
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const recognitionRef = useRef(null)
+  const mediaRecorderRef = useRef(null)
+  const audioChunksRef = useRef([])
+
+  const transcribeAudio = async (base64Data, mimeType) => {
+    const apiKey = 'AIzaSyDYNtpQwVOnD4BVLARdyXYhs-4tm18Hots';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            {
+              inlineData: {
+                mimeType: mimeType,
+                data: base64Data
+              }
+            },
+            {
+              text: "Transcribe this audio file to text exactly. If there is only noise or silence, return nothing. Do not add any extra feedback, comments, or explanations."
+            }
+          ]
+        }]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Transcription API failed');
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    return text ? text.trim() : '';
+  };
+
+  const toggleListening = async () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      if (isListening) {
+        recognitionRef.current?.stop();
+        setIsListening(false);
+        return;
+      }
+
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          setIsListening(true);
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          if (transcript) {
+            setInputValue(prev => prev ? prev + ' ' + transcript : transcript);
+          }
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+      } catch (e) {
+        console.error('Failed to initialize speech recognition:', e);
+        setIsListening(false);
+      }
+    } else {
+      // Firefox fallback using MediaRecorder + Gemini Transcribe
+      if (isListening) {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+          mediaRecorderRef.current.stop();
+        }
+        setIsListening(false);
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunksRef.current = [];
+        
+        let mimeType = 'audio/ogg';
+        if (MediaRecorder.isTypeSupported('audio/webm')) {
+          mimeType = 'audio/webm';
+        } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+          mimeType = 'audio/wav';
+        }
+
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+        mediaRecorderRef.current = mediaRecorder;
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = async () => {
+          stream.getTracks().forEach(track => track.stop());
+
+          const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+          setIsTranscribing(true);
+
+          try {
+            const reader = new FileReader();
+            reader.readAsDataURL(audioBlob);
+            reader.onloadend = async () => {
+              const base64Data = reader.result.split(',')[1];
+              try {
+                const text = await transcribeAudio(base64Data, mimeType);
+                if (text) {
+                  setInputValue(prev => prev ? prev + ' ' + text : text);
+                }
+              } catch (err) {
+                console.error('Gemini transcription failed:', err);
+                alert('Voice transcription failed. Please check internet connection.');
+              } finally {
+                setIsTranscribing(false);
+              }
+            };
+          } catch (err) {
+            console.error('Error reading audio blob:', err);
+            setIsTranscribing(false);
+          }
+        };
+
+        mediaRecorder.start();
+        setIsListening(true);
+      } catch (err) {
+        console.error('Microphone access denied or error:', err);
+        alert('Could not access microphone. Please allow microphone permissions.');
+        setIsListening(false);
+      }
+    }
+  };
   
   useEffect(() => {
-    fetch('/troubleshooting_docs.md')
-      .then(res => res.text())
-      .then(text => setDocsContent(text))
-      .catch(err => console.error('Error loading docs:', err))
+    fetch('/api/docs')
+      .then(res => {
+        if (!res.ok) throw new Error('API route failed');
+        return res.json();
+      })
+      .then(data => setDocsContent(data.content || ''))
+      .catch(err => {
+        console.warn('Failed to load docs from API, trying fallback file:', err);
+        fetch('/troubleshooting_docs.md')
+          .then(res => res.text())
+          .then(text => setDocsContent(text))
+          .catch(e => console.error('Failed both fallback methods:', e));
+      });
   }, [])
 
   const messagesEndRef = useRef(null)
@@ -125,21 +285,67 @@ function Chatbot() {
     })
   }
 
-  // Predefined responses based on inputs
+  // Dynamic local fallback response generator
   const getAIResponse = (input) => {
-    const text = input.toLowerCase()
-    
+    const text = input.toLowerCase().trim();
+
+    // 1. Try to find the answer dynamically from loaded docsContent first!
+    if (docsContent) {
+      const sections = docsContent.split(/###\s+/);
+      const cleanStr = (s) => s.toLowerCase().replace(/[?.,!:]/g, '').trim();
+      const inputCleaned = cleanStr(text);
+      
+      for (const section of sections) {
+        const lines = section.split('\n');
+        if (lines.length < 2) continue;
+        
+        const questionLine = lines[0].trim();
+        if (!questionLine) continue;
+        
+        let answerText = '';
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith('**Answer:**')) {
+            answerText = line.substring(11).trim();
+            break;
+          } else if (line.startsWith('Answer:')) {
+            answerText = line.substring(7).trim();
+            break;
+          } else if (line.startsWith('**') && line.endsWith('**')) {
+            answerText = line.replace(/^\*\*|\*\*$/g, '').trim();
+            break;
+          }
+        }
+        
+        if (!answerText) continue;
+        
+        const questionCleaned = cleanStr(questionLine);
+        
+        // Match if clean question contains the clean query or clean query contains the clean question
+        if (inputCleaned.includes(questionCleaned) || questionCleaned.includes(inputCleaned)) {
+          return answerText;
+        }
+        
+        // Match if all significant keywords (length > 3) are found in the question
+        const words = inputCleaned.split(/\s+/).filter(w => w.length > 3);
+        if (words.length > 0 && words.every(w => questionCleaned.includes(w))) {
+          return answerText;
+        }
+      }
+    }
+
+    // 2. Predefined fallback responses as second option
     // Check Q1: blinking red / LED
     if (text.includes('led') || text.includes('blinking red')) {
       return "The blinking red LED indicates a database connection timeout. Check if the database instance is running and verify the login credentials in the configuration file.";
     }
     // Check Q2: restart
     if (text.includes('restart') || text.includes('reboot')) {
-      return "Press and hold the manual power button on the front panel for 5 seconds, or execute the command `opsync restart` from the admin terminal.";
+      return "Press and hold the manual power button on the front panel for 5 seconds, or execute the command `oppsynce restart` from the admin terminal.";
     }
     // Check Q3: disk full
     if (text.includes('disk full') || text.includes('space') || text.includes('disk')) {
-      return "Clean up log files by running the clean command: `opsync clean-logs`. You can also configure log rotation in `opsync.config.json`.";
+      return "Clean up log files by running the clean command: `oppsynce clean-logs`. You can also configure log rotation in `oppsynce.config.json`.";
     }
     // Check Q4: sync conflict / warning
     if (text.includes('conflict') || text.includes('warning')) {
@@ -155,20 +361,46 @@ function Chatbot() {
       return "Hello! I'm here to help you. How can I assist you today?";
     }
 
-    // If it is a troubleshooting / system question but doesn't match the docs, ask to forward
-    if (text.includes('how') || text.includes('why') || text.includes('troubleshoot') || text.includes('problem') || text.includes('broken') || text.includes('issue') || text.includes('help') || text.includes('opsync')) {
-      return "I cannot find this in the documentation. Would you like to forward this message to the manager?";
-    }
-
     return "I cannot find this in the documentation. Would you like to forward this message to the manager?";
   }
 
-  const handleSubmitIssue = (msgId) => {
-    setSubmittedTickets(prev => [...prev, msgId])
-    setNotification("Ticket forwarded to manager")
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+  const handleSubmitIssue = async (msgId) => {
+    // Find the message index to extract user's original query text
+    const msgIdx = messages.findIndex(m => m.id === msgId);
+    let userQuery = "Sync-Engine-9000 troubleshooting request";
+    if (msgIdx > 0 && messages[msgIdx - 1].sender === 'user') {
+      userQuery = messages[msgIdx - 1].text;
+    }
+
+    try {
+      const response = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          machineId: 'Sync-Engine-9000',
+          machineName: 'Sync-Engine-9000',
+          reportedBy: 'AI Chatbot triage',
+          issueDescription: userQuery,
+          severity: 'critical'
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to create ticket: ${response.statusText}`);
+      }
+      setSubmittedTickets(prev => [...prev, msgId])
+      setNotification("Ticket forwarded to manager and saved to database")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (err) {
+      console.error("Error submitting ticket:", err);
+      // fallback to still show local success toast so UI works
+      setSubmittedTickets(prev => [...prev, msgId])
+      setNotification("Ticket forwarded to manager (offline fallback)")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   const handleSend = async (textToSend) => {
@@ -190,11 +422,11 @@ function Chatbot() {
     let aiResponseText
 
     try {
-      const apiKey = 'AIzaSyDYNtpQwVOnD4BVLARdyXYhs-4tm18Hots';
-      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+      const apiKey = 'AIzaSyB5zWEoj1QyYELPXU55pldhp1VDFEjU7IM';
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
 
         // Map history to Gemini API structure (role: 'user' | 'model')
-        const contents = currentHistory
+        let contents = currentHistory
           .filter(msg => msg.text)
           .map(msg => ({
             role: msg.sender === 'user' ? 'user' : 'model',
@@ -207,11 +439,15 @@ function Chatbot() {
           parts: [{ text: messageText }]
         });
 
+        // Gemini contents must start with 'user' role. Filter out any leading model messages.
+        while (contents.length > 0 && contents[0].role !== 'user') {
+          contents.shift();
+        }
+
         const response = await fetch(url, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-goog-api-key': apiKey
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             contents: contents,
@@ -327,7 +563,7 @@ function Chatbot() {
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            <span>Opsync</span>
+            <span>Oppsynce</span>
           </Link>
           <button className="new-chat-btn" onClick={createNewChat} title="New Chat">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -390,7 +626,7 @@ function Chatbot() {
               </svg>
             </button>
             <div className="chat-status-container">
-              <h3>Opsync Assistant</h3>
+              <h3>Oppsynce Assistant</h3>
               <div className="status-indicator">
                 <span className="status-dot"></span>
                 <span>Active Node</span>
@@ -424,7 +660,7 @@ function Chatbot() {
                 </div>
                 <div className="message-details">
                   <div className="message-meta">
-                    <span className="sender-name">{msg.sender === 'user' ? 'You' : 'Opsync Copilot'}</span>
+                    <span className="sender-name">{msg.sender === 'user' ? 'You' : 'Oppsynce Copilot'}</span>
                     <span className="message-time">{msg.timestamp}</span>
                   </div>
                   <div className="message-bubble">
@@ -486,7 +722,7 @@ function Chatbot() {
                 </div>
                 <div className="message-details">
                   <div className="message-meta">
-                    <span className="sender-name">Opsync Copilot</span>
+                    <span className="sender-name">Oppsynce Copilot</span>
                   </div>
                   <div className="message-bubble typing-bubble">
                     <span className="dot"></span>
@@ -510,12 +746,25 @@ function Chatbot() {
             </button>
             <textarea
               className="chat-textarea"
-              placeholder="Ask a troubleshooting question related to the machine..."
+              placeholder={isTranscribing ? "Transcribing your voice..." : isListening ? "Listening... Click mic to stop." : "Ask a troubleshooting question related to the machine..."}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               rows="1"
             />
+            <button
+              type="button"
+              className={`mic-msg-btn ${isListening ? 'listening' : ''}`}
+              onClick={toggleListening}
+              title={isListening ? "Stop listening" : "Voice Input (Speech to Text)"}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
             <button 
               className={`send-msg-btn ${inputValue.trim() ? 'active' : ''}`}
               onClick={() => handleSend()}

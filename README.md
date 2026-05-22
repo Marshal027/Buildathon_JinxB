@@ -1,20 +1,45 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Project Setup & Run Guide
 
-# Run and deploy your AI Studio app
+## 1. Run Backend Server
 
-This contains everything you need to run your app locally.
+Open terminal in the project root folder and run:
 
-View your app in AI Studio: https://ai.studio/apps/e275d1c1-d44e-4459-b3f3-d6e5cb9a74e0
+```powershell
+cd backend
+& .\venv\Scripts\Activate.ps1
+python manage.py runserver 0.0.0.0:8000
+```
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## 2. Run Opsync Frontend
 
+Open a new terminal and run:
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```powershell
+cd frontend\Opsync
+npm install
+npm run dev
+```
+
+---
+
+## 3. Run Worker App
+
+Open another terminal and run:
+
+```powershell
+cd frontend\worker-app
+npm install
+npm run dev
+```
+
+---
+
+# Notes
+
+- Make sure Python virtual environment (`venv`) is already created inside the `backend` folder.
+- Ensure Node.js and npm are installed.
+- Keep all three terminals running simultaneously.
+- Backend runs on port `8000`.
+- Frontend apps will show their local URLs in the terminal after starting.
