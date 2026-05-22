@@ -19,7 +19,6 @@ import ChatPage from './pages/ChatPage.jsx';
 import TicketsPage from './pages/TicketsPage.jsx';
 import PersonnelPage from './pages/PersonnelPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
-import WorkerPortal from './pages/WorkerPortal.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -34,7 +33,6 @@ export default function App() {
   const [workerLocations, setWorkerLocations] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
-  const [activeRecord, setActiveRecord] = useState(null);
   
   // Dashboard Metrics
   const [summary, setSummary] = useState({
@@ -69,14 +67,6 @@ export default function App() {
       setLiveAlerts(summaryRes.liveAlerts);
       setSummary(summaryRes.summary);
       setWorkerLocations(locationsRes);
-
-      // Check active clock in for Kowalski
-      const active = attendanceRes.find(a => a.workerId === currentUser.id && !a.clockOut);
-      if (active) {
-        setActiveRecord(active);
-      } else {
-        setActiveRecord(null);
-      }
     } catch (err) {
       console.error('Failure reloading database state:', err);
     }
@@ -182,10 +172,7 @@ export default function App() {
 
   // Handlers for Child Pages
   const handleChangeUserRole = (role) => {
-    if (role === 'worker') {
-      setCurrentUser({ id: 'T-492', name: 'J. Kowalski', role: 'worker' });
-      setActiveTab('worker-portal');
-    } else if (role === 'engineer') {
+    if (role === 'engineer') {
       setCurrentUser({ id: 'Eng-03', name: 'Sarah Miller', role: 'engineer' });
       setActiveTab('machine-health');
     } else {
@@ -247,32 +234,6 @@ export default function App() {
     } catch (err) {
       console.error('Failed to broadcast visual supervisor alert:', err);
     }
-  };
-
-  const handleWorkerClockIn = async (lat, lng) => {
-    const res = await fetch('/api/attendance/checkin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lat, lng, workerId: currentUser.id, workerName: currentUser.name })
-    });
-    const data = await res.json();
-    if (data.isValid) {
-      setActiveRecord(data);
-    }
-    fetchAllData();
-    return data;
-  };
-
-  const handleWorkerClockOut = async () => {
-    const res = await fetch('/api/attendance/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ workerId: currentUser.id })
-    });
-    const data = await res.json();
-    setActiveRecord(null);
-    fetchAllData();
-    return data;
   };
 
   const handleWorkerSOS = async (lat, lng) => {
@@ -388,16 +349,6 @@ export default function App() {
         );
       case 'settings':
         return <SettingsPage />;
-      case 'worker-portal':
-        return (
-          <WorkerPortal 
-            onClockIn={handleWorkerClockIn}
-            onClockOut={handleWorkerClockOut}
-            onTriggerSOS={handleWorkerSOS}
-            activeRecord={activeRecord}
-            wsConnected={wsConnected}
-          />
-        );
       default:
         return <div className="text-white text-center p-10 font-bold">Workspace View Error</div>;
     }
@@ -486,12 +437,6 @@ export default function App() {
           >
             System Settings
           </button>
-          <button 
-            onClick={() => { setActiveTab('worker-portal'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm text-[#b0cbd8] font-bold`}
-          >
-            Worker Companion App
-          </button>
 
           <div className="border-t border-[#9cd2b8]/10 my-2 pt-2"></div>
 
@@ -499,7 +444,7 @@ export default function App() {
             <span>Simulation Role</span>
             <div className="flex gap-2">
               <button onClick={() => handleChangeUserRole('manager')} className="text-[#9cd2b8]">Manager</button>
-              <button onClick={() => handleChangeUserRole('worker')} className="text-[#cbc3d9]">Worker</button>
+              <button onClick={() => handleChangeUserRole('engineer')} className="text-[#cbc3d9]">Engineer</button>
             </div>
           </div>
         </div>

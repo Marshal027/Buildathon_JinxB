@@ -115,26 +115,12 @@ export default function SideNavBar({
           <SettingsIcon className="w-4 h-4 text-inherit" />
           System Settings
         </button>
-
-        <div className="border-t border-[#9cd2b8]/10 my-2 pt-2"></div>
-
-        <button
-          onClick={() => setActiveTab('worker-portal')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'worker-portal'
-              ? 'text-[#b0cbd8] bg-[#b0cbd8]/15 border-r-2 border-[#b0cbd8] font-bold shadow-[0_0_15px_rgba(176,203,216,0.1)]'
-              : 'text-[#b0cbd8]/70 hover:text-white hover:bg-[#b0cbd8]/5'
-          }`}
-        >
-          <Smartphone className="w-4 h-4 text-inherit" />
-          Worker Companion App
-        </button>
       </div>
 
       {/* Role Picker Drawer */}
       <div className="p-3 rounded-xl bg-[#1c1b1d] border border-[#cac5cc]/10 flex flex-col gap-2">
         <span className="text-[10px] uppercase tracking-wider text-[#cac5cc]/50">Simulation Role</span>
-        <div className="grid grid-cols-3 gap-1 text-[11px] text-center">
+        <div className="grid grid-cols-2 gap-1 text-[11px] text-center">
           <button 
             onClick={() => onChangeUserRole('manager')}
             className={`py-1 rounded cursor-pointer ${currentUser.role === 'manager' ? 'bg-[#9cd2b8] text-black font-semibold' : 'bg-[#2b292b]/50 text-white'}`}
@@ -146,12 +132,6 @@ export default function SideNavBar({
             className={`py-1 rounded cursor-pointer ${currentUser.role === 'engineer' ? 'bg-[#b0cbd8] text-black font-semibold' : 'bg-[#2b292b]/50 text-white'}`}
           >
             Engineer
-          </button>
-          <button 
-            onClick={() => onChangeUserRole('worker')}
-            className={`py-1 rounded cursor-pointer ${currentUser.role === 'worker' ? 'bg-[#cbc3d9] text-[#1e1929] font-semibold' : 'bg-[#2b292b]/50 text-white'}`}
-          >
-            Worker
           </button>
         </div>
       </div>
