@@ -224,44 +224,7 @@ export default function ChatPage({
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full p-4 lg:p-6 overflow-hidden max-w-[1600px] mx-auto w-full">
       
-      {/* LEFT COLUMN: Predictive analytics array and ROI meters */}
-      <div className="w-full lg:w-96 flex flex-col gap-5 select-none overflow-y-auto shrink-0 pb-4 pr-1">
-        
 
-
-        {/* Module 2: ROI Analysis details */}
-        <div className="p-5 bg-gradient-to-br from-[#2a302a]/30 to-[#141514]/30 border border-[#9cd2b8]/20 rounded-2xl flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-[#9cd2b8]" />
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#9cd2b8]">Supervisory ROI Metrics</h3>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3.5 mt-1.5">
-            <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#cac5cc]/60 uppercase block">Downtime Saved</span>
-              <span className="text-xl font-bold text-white font-mono mt-0.5">142.5 hrs</span>
-            </div>
-            <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#cac5cc]/60 uppercase block">Est. Savings</span>
-              <span className="text-xl font-bold text-[#9cd2b8] font-mono mt-0.5">$428.5k</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-[#cac5cc]/60 leading-relaxed mt-1">
-            Calculated dynamically against historical component diagnostics from integrated smart factory signals logs.
-          </p>
-        </div>
-
-        {/* Module 3: Active Telemetric Anomalies */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">Anomalous Activity Spectrum</span>
-          <div className="flex flex-col gap-2.5">
-            <div className="p-2.5 rounded-xl bg-red-950/15 border border-[#ffb4ab]/20 text-[11px] leading-relaxed text-[#ffb4ab]">
-              <strong>Conveyor Beta Temp Critical:</strong> Core bearing temp spiked to 82.3°C under load line. Immediate inspection dispatched.
-            </div>
-          </div>
-        </div>
-
-      </div>
 
       {/* RIGHT COLUMN: AI Chatbot messaging arena */}
       <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl overflow-hidden min-h-[460px]">
