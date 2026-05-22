@@ -22,6 +22,7 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import WorkerPortal from './pages/WorkerPortal.jsx';
 import MailSystemPage from './pages/MailSystemPage.jsx';
 import Editor from '../pages/Editor.jsx';
+import CctvFootagePage from './pages/CctvFootagePage.jsx';
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState({ id: 'Admin-1', name: 'Admin Supervisor', role: 'manager' });
@@ -727,6 +728,9 @@ export default function App() {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <DashboardPage 
             summary={summary}
@@ -742,6 +746,9 @@ export default function App() {
           />
         );
       case 'machine-health':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <MachineHealthPage 
             machines={machines}
@@ -764,6 +771,9 @@ export default function App() {
           />
         );
       case 'tickets':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <TicketsPage 
             tickets={tickets}
@@ -772,6 +782,9 @@ export default function App() {
           />
         );
       case 'personnel':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <PersonnelPage 
             attendance={attendance}
@@ -779,13 +792,24 @@ export default function App() {
           />
         );
       case 'mail-system':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return <MailSystemPage />;
       case 'editor':
         if (currentUser.role !== 'manager') {
           return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Only Managers can access the Document Editor.</div>;
         }
         return <Editor />;
+      case 'cctv':
+        if (currentUser.role !== 'manager') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Only Managers can access the CCTV Footage.</div>;
+        }
+        return <CctvFootagePage />;
       case 'settings':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return <SettingsPage />;
       case 'worker-portal':
         return (
