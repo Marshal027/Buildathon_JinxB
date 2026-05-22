@@ -22,6 +22,7 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import WorkerPortal from './pages/WorkerPortal.jsx';
 import MailSystemPage from './pages/MailSystemPage.jsx';
 import Editor from '../pages/Editor.jsx';
+import CctvFootagePage from './pages/CctvFootagePage.jsx';
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState({ id: 'Admin-1', name: 'Admin Supervisor', role: 'manager' });
@@ -737,6 +738,11 @@ export default function App() {
           return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Only Managers can access the Document Editor.</div>;
         }
         return <Editor />;
+      case 'cctv':
+        if (currentUser.role !== 'manager') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Only Managers can access the CCTV Footage.</div>;
+        }
+        return <CctvFootagePage />;
       case 'settings':
         return <SettingsPage />;
       case 'worker-portal':
@@ -840,12 +846,20 @@ export default function App() {
             Mail System
           </button>
           {currentUser.role === 'manager' && (
-            <button 
-              onClick={() => { setActiveTab('editor'); setMobileMenuOpen(false); }}
-              className={`py-2.5 text-left text-sm ${activeTab === 'editor' ? 'text-[#9cd2b8] font-bold' : ''}`}
-            >
-              Document Editor
-            </button>
+            <>
+              <button 
+                onClick={() => { setActiveTab('editor'); setMobileMenuOpen(false); }}
+                className={`py-2.5 text-left text-sm ${activeTab === 'editor' ? 'text-[#9cd2b8] font-bold' : ''}`}
+              >
+                Document Editor
+              </button>
+              <button 
+                onClick={() => { setActiveTab('cctv'); setMobileMenuOpen(false); }}
+                className={`py-2.5 text-left text-sm ${activeTab === 'cctv' ? 'text-[#9cd2b8] font-bold' : ''}`}
+              >
+                CCTV Footage
+              </button>
+            </>
           )}
           <button 
             onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
