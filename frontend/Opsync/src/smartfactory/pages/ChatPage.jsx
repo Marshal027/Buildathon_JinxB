@@ -227,50 +227,7 @@ export default function ChatPage({
       {/* LEFT COLUMN: Predictive analytics array and ROI meters */}
       <div className="w-full lg:w-96 flex flex-col gap-5 select-none overflow-y-auto shrink-0 pb-4 pr-1">
         
-        {/* Module 1: AI Forecasting Gauges */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">AI Failure Prediction Models</h3>
-          </div>
 
-          <div className="flex flex-col gap-3.5">
-            
-            {/* Gauge 1: Extruder Alpha */}
-            <div className="p-3 bg-[#1c1b1d] border border-white/5 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">EX-02 Extruder Alpha</span>
-                <span className="text-[10px] font-mono font-bold text-[#b0cbd8] px-2 py-0.5 rounded bg-[#b0cbd8]/10 border border-[#b0cbd8]/20">12% Prob / Normal</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[12%] h-full bg-[#b0cbd8] rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Gauge 2: Conveyor Beta */}
-            <div className="p-3 bg-[#1e1919] border border-[#ffb4ab]/10 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">T-42 Conveyor Beta</span>
-                <span className="text-[10px] font-mono font-bold text-[#ffb4ab] px-2 py-0.5 rounded bg-red-950/20 border border-[#ffb4ab]/20 animate-pulse">78% Failure Risk / Critical</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[78%] h-full bg-[#ffb4ab] rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Gauge 3: Cooling Unit */}
-            <div className="p-3 bg-[#1c1b1d] border border-white/5 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">CLS-042 Cooling Unit</span>
-                <span className="text-[10px] font-mono font-bold text-[#9cd2b8] px-2 py-0.5 rounded bg-[#9cd2b8]/10 border border-[#9cd2b8]/20">4% Prob / Stable</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[4%] h-full bg-[#9cd2b8] rounded-full"></div>
-              </div>
-            </div>
-
-          </div>
-        </div>
 
         {/* Module 2: ROI Analysis details */}
         <div className="p-5 bg-gradient-to-br from-[#2a302a]/30 to-[#141514]/30 border border-[#9cd2b8]/20 rounded-2xl flex flex-col gap-3">
