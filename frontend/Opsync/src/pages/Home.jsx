@@ -10,7 +10,7 @@ function Home() {
 
     // Apply dark premium background specifically for the dashboard layout
     document.body.style.backgroundColor = '#0a0a0b'
-    document.body.style.color = '#cac5cc'
+    document.body.style.color = '#ffffff'
     document.documentElement.style.colorScheme = 'dark'
 
     return () => {

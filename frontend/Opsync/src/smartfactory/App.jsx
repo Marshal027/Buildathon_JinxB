@@ -184,9 +184,54 @@ export default function App() {
   useEffect(() => {
     fetchAllData();
     // Periodically fetch dashboard summary updates
-    const interval = setInterval(fetchAllData, 10000);
+    const interval = setInterval(fetchAllData, 15000);
     return () => clearInterval(interval);
-  }, [currentUser, machines, tickets, attendance]);
+  }, [currentUser]);
+
+  // Live telemetry simulation — drift machine data every 5 seconds
+  useEffect(() => {
+    const simInterval = setInterval(() => {
+      // Simulate machine telemetry drift
+      setMachines(prev => prev.map(m => {
+        if (m.status === 'offline') return m;
+        const tempDrift = (Math.random() - 0.48) * 2.2;
+        const vibDrift = (Math.random() - 0.48) * 1.5;
+        const healthDrift = Math.random() < 0.15 ? (Math.random() < 0.5 ? -1 : 1) : 0;
+        const newHealth = Math.max(10, Math.min(100, m.healthScore + healthDrift));
+        const newTemp = parseFloat(Math.max(20, m.temp + tempDrift).toFixed(1));
+        const newVib = parseFloat(Math.max(0.5, m.vibration + vibDrift).toFixed(1));
+        // Status can shift based on health
+        let newStatus = m.status;
+        if (newHealth < 50) newStatus = 'offline';
+        else if (newHealth < 70) newStatus = 'warning';
+        else if (m.status === 'warning' && newHealth > 80) newStatus = 'online';
+        return { ...m, temp: newTemp, vibration: newVib, healthScore: newHealth, status: newStatus };
+      }));
+
+      // Drift worker location coordinates slightly
+      setWorkerLocations(prev => prev.map(w => ({
+        ...w,
+        lat: parseFloat((w.lat + (Math.random() - 0.5) * 0.0002).toFixed(6)),
+        lng: parseFloat((w.lng + (Math.random() - 0.5) * 0.0002).toFixed(6)),
+        lastUpdate: new Date().toISOString()
+      })));
+
+      // Recalculate summary from live state
+      setSummary(prev => {
+        const prodDrift = (Math.random() - 0.45) * 0.6;
+        return {
+          ...prev,
+          productivity: Math.max(85, Math.min(99, parseFloat((prev.productivity + prodDrift).toFixed(1)))),
+          machinesOnline: machines.filter(m => m.status === 'online' || m.status === 'warning').length,
+          machinesTotal: machines.length,
+          openTickets: tickets.filter(t => t.status !== 'resolved').length,
+          criticalTickets: tickets.filter(t => t.status !== 'resolved' && t.severity === 'critical').length,
+          personnelActive: workerLocations.length + 125
+        };
+      });
+    }, 5000);
+    return () => clearInterval(simInterval);
+  }, [machines, tickets, workerLocations]);
 
   // Connect WebSocket with exponential fail reconnect
   useEffect(() => {
@@ -241,6 +286,9 @@ export default function App() {
                 },
                 ...prev
               ]);
+              break;
+            case 'ticket.updated':
+              setTickets(prev => prev.map(t => t.id === signal.payload.id ? signal.payload : t));
               break;
             case 'alert.sos':
               setActiveSOS({
@@ -755,28 +803,48 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] text-[#cac5cc] font-sans flex relative select-none">
+    <div className="min-h-screen bg-[#0a0a0b] text-[#ffffff] font-sans flex relative select-none">
       
-      {/* Real-time top screen alarm distress banner */}
+      {/* Real-time floating alarm distress card */}
       {activeSOS && (
-        <div className="fixed top-0 inset-x-0 bg-[#ba1a1a] text-white py-3.5 px-6 flex items-center justify-between z-[999] shadow-2xl border-b border-[#ffb4ab]/30 animate-pulse">
-          <div className="flex items-center gap-3">
-            <ShieldAlert className="w-5 h-5 text-white" />
-            <span className="text-xs md:text-sm font-bold tracking-tight uppercase">
-              ⚠️ GEOFENCED CRITICAL SOS DETECTED FROM OPERATOR (Name: <strong className="underline text-yellow-300 font-bold">{activeSOS.name}</strong>, ID: {activeSOS.id}). Coords: {activeSOS.lat.toFixed(6)}, {activeSOS.lng.toFixed(6)}. DISPATCH MEDICAL SECURITY IMMEDIATELY.
-            </span>
+        <div className="fixed top-20 right-6 left-6 md:left-auto md:w-[450px] bg-[#1c1b1d]/95 backdrop-blur-md border border-[#ba1a1a]/30 rounded-2xl shadow-[0_20px_50px_rgba(186,26,26,0.3)] z-[999] overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-[#ba1a1a] transition-all duration-300">
+          <div className="p-5 flex flex-col gap-3">
+            <div className="flex items-center gap-3 border-b border-white/5 pb-2.5">
+              <ShieldAlert className="w-5 h-5 text-[#ba1a1a]" />
+              <span className="text-xs font-bold tracking-wider uppercase text-red-500">
+                CRITICAL SOS DISTRESS SIGNAL
+              </span>
+            </div>
+            
+            <div className="flex flex-col gap-1.5 text-xs">
+              <div className="text-white font-semibold">
+                Operator Name: <span className="text-yellow-400 font-bold">{activeSOS.name}</span>
+              </div>
+              <div className="text-[#ffffff]/80">
+                Worker ID: <span className="font-mono text-white">{activeSOS.id}</span>
+              </div>
+              <div className="text-[#ffffff]/80">
+                Coordinates: <span className="font-mono text-white">{activeSOS.lat.toFixed(6)}, {activeSOS.lng.toFixed(6)}</span>
+              </div>
+              <p className="text-xs text-[#ffb4ab] mt-2 font-medium bg-[#ba1a1a]/10 border border-[#ba1a1a]/20 p-2.5 rounded-lg leading-relaxed">
+                ⚠️ GEOFENCED CRITICAL SOS DETECTED. Immediate response requested. Dispatch medical and security teams to the location zone.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-white/5">
+              <button 
+                onClick={() => setActiveSOS(null)}
+                className="text-xs font-bold bg-[#ba1a1a] hover:bg-[#93000a] text-white rounded-xl px-4 py-2 transition-all active:scale-95 shadow-md shadow-red-950 cursor-pointer"
+              >
+                Acknowledge Alarm
+              </button>
+            </div>
           </div>
-          <button 
-            onClick={() => setActiveSOS(null)}
-            className="text-xs font-mono font-bold bg-white/20 hover:bg-white/30 text-white rounded cursor-pointer px-2.5 py-1"
-          >
-            Acknowledge Alarm
-          </button>
         </div>
       )}
 
       {/* Main Navigation Sidebar desktop */}
-      <div className={`${activeSOS ? 'pt-14' : ''} hidden md:block`}>
+      <div className="hidden md:block">
         <SideNavBar 
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -792,7 +860,7 @@ export default function App() {
         <h1 className="text-[#9cd2b8] font-bold text-sm tracking-tight">Oppsynce</h1>
         <button 
           onClick={() => setMobileMenuOpen(prev => !prev)}
-          className="p-1.5 text-[#cac5cc] hover:text-white"
+          className="p-1.5 text-[#ffffff] hover:text-white"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -873,7 +941,7 @@ export default function App() {
       )}
 
       {/* Main layout contents area wrapper */}
-      <div className={`flex-1 min-w-0 md:pl-72 ${activeSOS ? 'pt-24 md:pt-16 pb-4' : 'pt-14 md:pt-0 pb-4'}`}>
+      <div className="flex-1 min-w-0 md:pl-52 pt-14 md:pt-0 pb-4">
         <main className="h-full min-h-screen">
           {renderTabContent()}
         </main>

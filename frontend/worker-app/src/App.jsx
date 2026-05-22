@@ -133,7 +133,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] text-[#cac5cc] font-sans flex flex-col p-4 gap-6 select-none max-w-md mx-auto">
+    <div className="min-h-screen bg-[#0a0a0b] text-[#ffffff] font-sans flex flex-col p-4 gap-6 select-none max-w-md mx-auto">
       
       {/* Header */}
       <div className="flex justify-between items-center border-b border-white/5 pb-4">
@@ -156,7 +156,7 @@ export default function App() {
 
       {showSettings && (
         <div className="p-4 bg-[#1c1b1d] border border-white/10 rounded-xl flex flex-col gap-3">
-          <label className="text-xs font-bold uppercase text-[#cac5cc]/60">Backend API URL</label>
+          <label className="text-xs font-bold uppercase text-[#ffffff]/60">Backend API URL</label>
           <input 
             type="text" 
             value={apiBase} 
@@ -164,7 +164,7 @@ export default function App() {
             className="bg-black/40 border border-white/10 rounded-lg p-2 text-sm text-white font-mono"
             placeholder="http://192.168.1.XX:3000"
           />
-          <p className="text-[10px] text-[#cac5cc]/40 italic">Restart app after changing URL for WebSocket to update.</p>
+          <p className="text-[10px] text-[#ffffff]/40 italic">Restart app after changing URL for WebSocket to update.</p>
         </div>
       )}
 
@@ -178,12 +178,12 @@ export default function App() {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-white uppercase tracking-tight">J. Kowalski</span>
-            <span className="text-xs text-[#cac5cc]/60">Assembly Section A Operator</span>
+            <span className="text-xs text-[#ffffff]/60">Assembly Section A Operator</span>
           </div>
         </div>
 
         {/* GPS Simulation */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-[#cbc3d9]" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Simulated GPS</h3>
@@ -193,7 +193,7 @@ export default function App() {
             <button
               onClick={() => setIsInFactory(true)}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                isInFactory ? 'bg-[#9cd2b8] text-black' : 'bg-white/5 text-[#cac5cc]/60'
+                isInFactory ? 'bg-[#9cd2b8] text-black' : 'bg-white/5 text-[#ffffff]/60'
               }`}
             >
               In Factory
@@ -201,14 +201,14 @@ export default function App() {
             <button
               onClick={() => setIsInFactory(false)}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                !isInFactory ? 'bg-[#93000a] text-[#ffb4ab]' : 'bg-white/5 text-[#cac5cc]/60'
+                !isInFactory ? 'bg-[#93000a] text-[#ffb4ab]' : 'bg-white/5 text-[#ffffff]/60'
               }`}
             >
               Outside
             </button>
           </div>
 
-          <div className="font-mono text-[10px] flex justify-between text-[#cac5cc]/60 bg-black/40 p-2 rounded-lg">
+          <div className="font-mono text-[10px] flex justify-between text-[#ffffff]/60 bg-black/40 p-2 rounded-lg">
             <span>{simLat.toFixed(6)}, {simLng.toFixed(6)}</span>
             <span className={isInFactory ? 'text-[#9cd2b8]' : 'text-[#ffb4ab]'}>
               {isInFactory ? 'AUTHORIZED' : 'OUT_OF_BOUNDS'}
@@ -225,7 +225,7 @@ export default function App() {
               </div>
               <div className="text-center">
                 <span className="text-sm font-bold text-[#9cd2b8] uppercase tracking-widest">Active Shift</span>
-                <p className="text-xs text-[#cac5cc]/60 mt-1">Started: {new Date(activeRecord.clockIn).toLocaleTimeString()}</p>
+                <p className="text-xs text-[#ffffff]/60 mt-1">Started: {new Date(activeRecord.clockIn).toLocaleTimeString()}</p>
               </div>
               <button
                 onClick={handleClockOut}
@@ -237,11 +237,11 @@ export default function App() {
           ) : (
             <div className="flex flex-col items-center gap-6">
               <div className="w-32 h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                <Clock className="w-12 h-12 text-[#cac5cc]/20" />
+                <Clock className="w-12 h-12 text-[#ffffff]/20" />
               </div>
               <div className="text-center">
                 <span className="text-sm font-bold text-white uppercase tracking-widest">Off Duty</span>
-                <p className="text-xs text-[#cac5cc]/40 mt-1">Please clock in to begin logging</p>
+                <p className="text-xs text-[#ffffff]/40 mt-1">Please clock in to begin logging</p>
               </div>
               <button
                 onClick={handleClockIn}

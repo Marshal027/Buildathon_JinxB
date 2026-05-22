@@ -228,7 +228,7 @@ export default function ChatPage({
       <div className="w-full lg:w-96 flex flex-col gap-5 select-none overflow-y-auto shrink-0 pb-4 pr-1">
         
         {/* Module 1: AI Forecasting Gauges */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-cyan-400" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">AI Failure Prediction Models</h3>
@@ -281,21 +281,21 @@ export default function ChatPage({
           
           <div className="grid grid-cols-2 gap-3.5 mt-1.5">
             <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#cac5cc]/60 uppercase block">Downtime Saved</span>
+              <span className="text-[10px] text-[#ffffff]/60 uppercase block">Downtime Saved</span>
               <span className="text-xl font-bold text-white font-mono mt-0.5">142.5 hrs</span>
             </div>
             <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#cac5cc]/60 uppercase block">Est. Savings</span>
+              <span className="text-[10px] text-[#ffffff]/60 uppercase block">Est. Savings</span>
               <span className="text-xl font-bold text-[#9cd2b8] font-mono mt-0.5">$428.5k</span>
             </div>
           </div>
-          <p className="text-[11px] text-[#cac5cc]/60 leading-relaxed mt-1">
+          <p className="text-[11px] text-[#ffffff]/60 leading-relaxed mt-1">
             Calculated dynamically against historical component diagnostics from integrated smart factory signals logs.
           </p>
         </div>
 
         {/* Module 3: Active Telemetric Anomalies */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-3">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-3">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">Anomalous Activity Spectrum</span>
           <div className="flex flex-col gap-2.5">
             <div className="p-2.5 rounded-xl bg-red-950/15 border border-[#ffb4ab]/20 text-[11px] leading-relaxed text-[#ffb4ab]">
@@ -307,24 +307,24 @@ export default function ChatPage({
       </div>
 
       {/* RIGHT COLUMN: AI Chatbot messaging arena */}
-      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl overflow-hidden min-h-[460px]">
+      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl overflow-hidden min-h-[460px]">
         
         {/* Chat Area Header */}
-        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#cac5cc]/10 flex items-center justify-between">
+        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#ffffff]/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-950 to-blue-900 border border-cyan-400/40 flex items-center justify-center text-cyan-400">
               <Bot className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">opp sync AI Assistant</h3>
-              <p className="text-[11px] text-[#cac5cc]/60">Gemini-Powered Smart Diagnostic Diagnostic Desk</p>
+              <p className="text-[11px] text-[#ffffff]/60">Gemini-Powered Smart Diagnostic Diagnostic Desk</p>
             </div>
           </div>
           
           <button 
             type="button"
             onClick={onClearSession}
-            className="p-1.5 rounded-lg text-[#cac5cc]/50 hover:text-[#ffb4ab] hover:bg-white/5 transition-all cursor-pointer"
+            className="p-1.5 rounded-lg text-[#ffffff]/50 hover:text-[#ffb4ab] hover:bg-white/5 transition-all cursor-pointer"
             title="Clear Chat Logs"
           >
             <Trash2 className="w-4 h-4" />
@@ -336,10 +336,10 @@ export default function ChatPage({
           
           {/* Welcome baseline message */}
           {messages.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-[#cac5cc]/40 select-none">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-[#ffffff]/40 select-none">
               <Sparkles className="w-12 h-12 mb-3 text-cyan-500 opacity-60 animate-bounce" />
               <h4 className="text-sm font-semibold text-white/70">Co-Pilot Telemetry Diagnosis</h4>
-              <p className="text-xs max-w-sm mt-1.5 leading-relaxed text-[#cac5cc]/60">
+              <p className="text-xs max-w-sm mt-1.5 leading-relaxed text-[#ffffff]/60">
                 Type anomalous issues about available operational assets. Try attaching camera photos for visual diagnostic assessments using multimodals.
               </p>
             </div>
@@ -423,7 +423,7 @@ export default function ChatPage({
                       )}
                     </div>
                   )}
-                  <span className="text-[9px] font-mono text-[#cac5cc]/50 self-end mt-1">{msg.timestamp}</span>
+                  <span className="text-[9px] font-mono text-[#ffffff]/50 self-end mt-1">{msg.timestamp}</span>
                 </div>
               </div>
             ))
@@ -454,7 +454,7 @@ export default function ChatPage({
         )}
 
         {/* Input Control Tray */}
-        <div className="p-4 bg-gradient-to-t from-black to-transparent border-t border-[#cac5cc]/10 flex flex-col gap-2">
+        <div className="p-4 bg-gradient-to-t from-black to-transparent border-t border-[#ffffff]/10 flex flex-col gap-2">
           
           <form onSubmit={handleSendMessage} className="flex items-center gap-2 relative">
             <input 
@@ -473,7 +473,7 @@ export default function ChatPage({
                 className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                   isListening 
                     ? 'text-red-400 bg-red-950/20 border border-red-500/35 animate-pulse' 
-                    : 'text-[#cac5cc]/60 hover:text-cyan-400 hover:bg-white/5'
+                    : 'text-[#ffffff]/60 hover:text-cyan-400 hover:bg-white/5'
                 }`}
                 title={isListening ? "Listening... click to stop" : "Voice Input (Speech to Text)"}
               >
@@ -487,7 +487,7 @@ export default function ChatPage({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="p-1.5 rounded-lg text-[#cac5cc]/60 hover:text-cyan-400 hover:bg-white/5 transition-all cursor-pointer"
+                className="p-1.5 rounded-lg text-[#ffffff]/60 hover:text-cyan-400 hover:bg-white/5 transition-all cursor-pointer"
                 title="Attach fault signals image"
               >
                 <Paperclip className="w-3.5 h-3.5" />
@@ -516,14 +516,14 @@ export default function ChatPage({
             <button 
               type="button"
               onClick={() => setInputText('How is the current status of Conveyor Beta? My belt is making a heavy squealing sound under tension.')}
-              className="text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/5 text-[#cac5cc]/75 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
+              className="text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/5 text-[#ffffff]/75 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
             >
               Squealing Noise
             </button>
             <button 
               type="button"
               onClick={() => setInputText('Spindle axis thermal sensor is indicating 115 degrees Celsius. Should I stop the production?')}
-              className="text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/5 text-[#cac5cc]/75 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
+              className="text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/5 text-[#ffffff]/75 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
             >
               Overheating Spindle
             </button>

@@ -27,6 +27,7 @@ class Ticket(models.Model):
     severity = models.CharField(max_length=20, default='complex') # critical, complex, moderate, low, simple
     status = models.CharField(max_length=20, default='open') # open, resolved
     createdAt = models.DateTimeField(default=timezone.now)
+    resolvedAt = models.DateTimeField(blank=True, null=True)
     checklist = models.JSONField(default=list)
 
     def __str__(self):

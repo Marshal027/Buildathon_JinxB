@@ -80,6 +80,20 @@ def me_view(req):
 @api_view(['GET'])
 def machines_list(req):
     machines = Machine.objects.all()
+    for m in machines:
+        if m.status != 'offline':
+            temp_delta = (random.random() - 0.48) * 1.8
+            vib_delta = (random.random() - 0.48) * 1.2
+            press_delta = random.randint(-2, 2)
+            health_delta = random.choice([-1, 0, 0, 0, 1]) if random.random() < 0.1 else 0
+            
+            m.temp = round(max(15.0, m.temp + temp_delta), 1)
+            m.vibration = round(max(0.1, m.vibration + vib_delta), 1)
+            if m.pressure > 0:
+                m.pressure = max(10, m.pressure + press_delta)
+            m.healthScore = max(10, min(100, m.healthScore + health_delta))
+            m.save()
+            
     serializer = MachineSerializer(machines, many=True)
     return Response(serializer.data)
 
@@ -260,6 +274,7 @@ def ticket_detail(req, id):
     serializer = TicketSerializer(ticket, data=req.data, partial=True)
     if serializer.is_valid():
         updated_ticket = serializer.save()
+        ws_broadcast('ticket.updated', TicketSerializer(updated_ticket).data)
         return Response(TicketSerializer(updated_ticket).data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
