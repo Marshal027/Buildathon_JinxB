@@ -44,29 +44,33 @@ export default function SideNavBar({
 
       {/* Main Nav */}
       <div className="flex-1 flex flex-col gap-1 overflow-y-auto">
-        <button
-          onClick={() => setActiveTab('dashboard')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'dashboard'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <BarChart2 className="w-4 h-4 text-inherit" />
-          Manager Dashboard
-        </button>
+        {currentUser.role !== 'engineer' && (
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'dashboard'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <BarChart2 className="w-4 h-4 text-inherit" />
+            Manager Dashboard
+          </button>
+        )}
 
-        <button
-          onClick={() => setActiveTab('machine-health')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'machine-health'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <Cpu className="w-4 h-4 text-inherit" />
-          Machine Health Layout
-        </button>
+        {currentUser.role !== 'engineer' && (
+          <button
+            onClick={() => setActiveTab('machine-health')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'machine-health'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <Cpu className="w-4 h-4 text-inherit" />
+            Machine Health Layout
+          </button>
+        )}
 
         {currentUser.role === 'engineer' && (
           <button
@@ -82,20 +86,22 @@ export default function SideNavBar({
           </button>
         )}
 
-        <button
-          onClick={() => setActiveTab('tickets')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'tickets'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <Ticket className="w-4 h-4 text-inherit" />
-          Tickets Explorer
-          <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-[#ffb4ab]/10 border border-[#ffb4ab]/20 text-[#ffb4ab]">
-            Active
-          </span>
-        </button>
+        {currentUser.role !== 'engineer' && (
+          <button
+            onClick={() => setActiveTab('tickets')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'tickets'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <Ticket className="w-4 h-4 text-inherit" />
+            Tickets Explorer
+            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-[#ffb4ab]/10 border border-[#ffb4ab]/20 text-[#ffb4ab]">
+              Active
+            </span>
+          </button>
+        )}
 
         <button
           onClick={() => setActiveTab('personnel')}
@@ -109,17 +115,19 @@ export default function SideNavBar({
           Personnel Roster
         </button>
 
-        <button
-          onClick={() => setActiveTab('mail-system')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'mail-system'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <Mail className="w-4 h-4 text-inherit" />
-          Mail System
-        </button>
+        {currentUser.role !== 'engineer' && (
+          <button
+            onClick={() => setActiveTab('mail-system')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'mail-system'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <Mail className="w-4 h-4 text-inherit" />
+            Mail System
+          </button>
+        )}
 
         {currentUser.role === 'manager' && (
           <>
@@ -147,17 +155,19 @@ export default function SideNavBar({
             </button>
           </>
         )}
-        <button
-          onClick={() => setActiveTab('settings')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'settings'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <SettingsIcon className="w-4 h-4 text-inherit" />
-          System Settings
-        </button>
+        {currentUser.role !== 'engineer' && (
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'settings'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <SettingsIcon className="w-4 h-4 text-inherit" />
+            System Settings
+          </button>
+        )}
       </div>
 
       {/* Role Picker Drawer */}

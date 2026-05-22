@@ -287,7 +287,7 @@ export default function App() {
       setActiveTab('worker-portal');
     } else if (role === 'engineer') {
       setCurrentUser({ id: 'Eng-03', name: 'Sarah Miller', role: 'engineer' });
-      setActiveTab('machine-health');
+      setActiveTab('maintenance-ai');
     } else {
       setCurrentUser({ id: 'Admin-1', name: 'Admin Supervisor', role: 'manager' });
       setActiveTab('dashboard');
@@ -680,6 +680,9 @@ export default function App() {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <DashboardPage 
             summary={summary}
@@ -695,6 +698,9 @@ export default function App() {
           />
         );
       case 'machine-health':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <MachineHealthPage 
             machines={machines}
@@ -717,6 +723,9 @@ export default function App() {
           />
         );
       case 'tickets':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return (
           <TicketsPage 
             tickets={tickets}
@@ -732,6 +741,9 @@ export default function App() {
           />
         );
       case 'mail-system':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return <MailSystemPage />;
       case 'editor':
         if (currentUser.role !== 'manager') {
@@ -744,6 +756,9 @@ export default function App() {
         }
         return <CctvFootagePage />;
       case 'settings':
+        if (currentUser.role === 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
+        }
         return <SettingsPage />;
       case 'worker-portal':
         return (
@@ -807,18 +822,22 @@ export default function App() {
       {/* Mobile drawer routing overlay navigation */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 bg-[#0a0a0b]/95 z-[90] pt-16 px-4 flex flex-col gap-2">
-          <button 
-            onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'dashboard' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Manager Dashboard
-          </button>
-          <button 
-            onClick={() => { setActiveTab('machine-health'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'machine-health' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Machine Health Layout
-          </button>
+          {currentUser.role !== 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'dashboard' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              Manager Dashboard
+            </button>
+          )}
+          {currentUser.role !== 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('machine-health'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'machine-health' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              Machine Health Layout
+            </button>
+          )}
           {currentUser.role === 'engineer' && (
             <button 
               onClick={() => { setActiveTab('maintenance-ai'); setMobileMenuOpen(false); }}
@@ -827,24 +846,28 @@ export default function App() {
               Maintenance AI Chat
             </button>
           )}
-          <button 
-            onClick={() => { setActiveTab('tickets'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'tickets' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Tickets Explorer
-          </button>
+          {currentUser.role !== 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('tickets'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'tickets' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              Tickets Explorer
+            </button>
+          )}
           <button 
             onClick={() => { setActiveTab('personnel'); setMobileMenuOpen(false); }}
             className={`py-2.5 text-left text-sm ${activeTab === 'personnel' ? 'text-[#9cd2b8] font-bold' : ''}`}
           >
             Personnel Roster
           </button>
-          <button 
-            onClick={() => { setActiveTab('mail-system'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'mail-system' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Mail System
-          </button>
+          {currentUser.role !== 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('mail-system'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'mail-system' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              Mail System
+            </button>
+          )}
           {currentUser.role === 'manager' && (
             <>
               <button 
@@ -861,12 +884,14 @@ export default function App() {
               </button>
             </>
           )}
-          <button 
-            onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'settings' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            System Settings
-          </button>
+          {currentUser.role !== 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'settings' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              System Settings
+            </button>
+          )}
           <button 
             onClick={() => { setActiveTab('worker-portal'); setMobileMenuOpen(false); }}
             className={`py-2.5 text-left text-sm text-[#b0cbd8] font-bold`}
