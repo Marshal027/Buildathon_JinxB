@@ -10,7 +10,8 @@ import {
   Radio, 
   LogOut, 
   ShieldAlert,
-  Smartphone
+  Smartphone,
+  Mail
 } from 'lucide-react';
 
 export default function SideNavBar({ 
@@ -31,7 +32,7 @@ export default function SideNavBar({
             <Radio className="w-4 h-4 text-[#9cd2b8]" />
           </div>
           <h1 className="font-display text-lg font-bold text-[#9cd2b8] drop-shadow-[0_0_15px_rgba(156,210,184,0.3)] tracking-tight">
-            SmartFactory 360°
+            opp sync
           </h1>
         </div>
         <p className="text-[10px] text-[#cac5cc]/60 uppercase tracking-widest pl-10">
@@ -65,17 +66,19 @@ export default function SideNavBar({
           Machine Health Layout
         </button>
 
-        <button
-          onClick={() => setActiveTab('maintenance-ai')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'maintenance-ai'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <MessageSquare className="w-4 h-4 text-inherit" />
-          Maintenance AI Chat
-        </button>
+        {currentUser.role === 'engineer' && (
+          <button
+            onClick={() => setActiveTab('maintenance-ai')}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+              activeTab === 'maintenance-ai'
+                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-inherit" />
+            Maintenance AI Chat
+          </button>
+        )}
 
         <button
           onClick={() => setActiveTab('tickets')}
@@ -102,6 +105,18 @@ export default function SideNavBar({
         >
           <Users className="w-4 h-4 text-inherit" />
           Personnel Roster
+        </button>
+
+        <button
+          onClick={() => setActiveTab('mail-system')}
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
+            activeTab === 'mail-system'
+              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
+              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
+          }`}
+        >
+          <Mail className="w-4 h-4 text-inherit" />
+          Mail System
         </button>
 
         <button

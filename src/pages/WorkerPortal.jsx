@@ -143,7 +143,7 @@ export default function WorkerPortal({
             
             {/* Top Bar Indicators */}
             <div className="flex justify-between text-[11px] font-mono text-[#cac5cc]/60 select-none pb-2 border-b border-white/5">
-              <span>SmartFactory Mobile</span>
+              <span>opp sync Mobile</span>
               <div className="flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
                 <span>LTE / TX</span>

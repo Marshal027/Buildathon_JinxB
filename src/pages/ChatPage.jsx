@@ -12,12 +12,35 @@ export default function ChatPage({
   messages, 
   onSubmitMessage, 
   onClearSession,
-  machines 
+  machines,
+  onAddTicket
 }) {
   const [inputText, setInputText] = useState('');
   const [attachedImage, setAttachedImage] = useState(null);
+  const [createdTicketMessageIds, setCreatedTicketMessageIds] = useState({});
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  const handleCreateTicket = async (msgId, userQuery) => {
+    if (createdTicketMessageIds[msgId]) return;
+    if (onAddTicket) {
+      try {
+        await onAddTicket({
+          machineId: 'Sync-Engine-9000',
+          machineName: 'Sync-Engine-9000',
+          reportedBy: 'AI Chatbot triage',
+          issueDescription: userQuery,
+          severity: 'critical'
+        });
+        setCreatedTicketMessageIds(prev => ({
+          ...prev,
+          [msgId]: true
+        }));
+      } catch (err) {
+        console.error("Failed to create ticket:", err);
+      }
+    }
+  };
 
   // Auto scroll
   useEffect(() => {
@@ -139,7 +162,7 @@ export default function ChatPage({
               <Bot className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">SmartFactory AI Assistant</h3>
+              <h3 className="text-sm font-semibold text-white">opp sync AI Assistant</h3>
               <p className="text-[11px] text-[#cac5cc]/60">Gemini-Powered Smart Diagnostic Diagnostic Desk</p>
             </div>
           </div>
@@ -196,6 +219,27 @@ export default function ChatPage({
                     />
                   )}
                   <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                  
+                  {msg.role === 'assistant' && msg.cannot_answer && (
+                    <div className="mt-3 p-3 bg-red-950/20 border border-[#ffb4ab]/20 rounded-xl flex flex-col gap-2">
+                      <p className="text-[11px] text-[#ffb4ab] font-semibold">Do you want to create a ticket?</p>
+                      {createdTicketMessageIds[msg.id] ? (
+                        <span className="text-[10px] text-[#9cd2b8] font-mono">✓ Ticket Created Successfully!</span>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const msgIndex = messages.findIndex(m => m.id === msg.id);
+                            const userQuery = msgIndex > 0 ? messages[msgIndex - 1].content : "Unresolved diagnostic issue";
+                            handleCreateTicket(msg.id, userQuery);
+                          }}
+                          className="py-1.5 px-3 bg-[#ffb4ab] hover:bg-[#ffb4ab]/80 text-neutral-900 font-bold text-[11px] rounded-lg transition-all active:scale-95 cursor-pointer self-start"
+                        >
+                          Submit Ticket
+                        </button>
+                      )}
+                    </div>
+                  )}
+
                   <span className="text-[9px] font-mono text-[#cac5cc]/50 self-end mt-1">{msg.timestamp}</span>
                 </div>
               </div>

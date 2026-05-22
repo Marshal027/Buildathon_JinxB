@@ -10,7 +10,8 @@ import {
   ShieldAlert,
   Bell,
   Menu,
-  X
+  X,
+  Mail
 } from 'lucide-react';
 import SideNavBar from './components/SideNavBar.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
@@ -19,6 +20,7 @@ import ChatPage from './pages/ChatPage.jsx';
 import TicketsPage from './pages/TicketsPage.jsx';
 import PersonnelPage from './pages/PersonnelPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
+import MailSystemPage from './pages/MailSystemPage.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -276,14 +278,10 @@ export default function App() {
         id: Math.random().toString(),
         role: 'assistant',
         content: data.response_text,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
+        cannot_answer: data.cannot_answer
       };
       setChatMessages(prev => [...prev, aiMsg]);
-
-      // If a ticket was automatically spawned, fetch database update
-      if (data.ticket_id) {
-        fetchAllData();
-      }
     } catch (e) {
       console.error('Chat error:', e);
     }
@@ -324,12 +322,16 @@ export default function App() {
           />
         );
       case 'maintenance-ai':
+        if (currentUser.role !== 'engineer') {
+          return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Only Engineers can access the AI Chat.</div>;
+        }
         return (
           <ChatPage 
             messages={chatMessages}
             onSubmitMessage={handleBotSubmitMessage}
             onClearSession={handleClearSession}
             machines={machines}
+            onAddTicket={handleAddTicket}
           />
         );
       case 'tickets':
@@ -347,6 +349,8 @@ export default function App() {
             workerLocations={workerLocations}
           />
         );
+      case 'mail-system':
+        return <MailSystemPage />;
       case 'settings':
         return <SettingsPage />;
       default:
@@ -389,7 +393,7 @@ export default function App() {
 
       {/* Responsive mobile header bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#141314] border-b border-white/5 flex items-center justify-between px-4 z-[100]">
-        <h1 className="text-[#9cd2b8] font-bold text-sm tracking-tight">SmartFactory 360°</h1>
+        <h1 className="text-[#9cd2b8] font-bold text-sm tracking-tight">opp sync</h1>
         <button 
           onClick={() => setMobileMenuOpen(prev => !prev)}
           className="p-1.5 text-[#cac5cc] hover:text-white"
@@ -413,12 +417,14 @@ export default function App() {
           >
             Machine Health Layout
           </button>
-          <button 
-            onClick={() => { setActiveTab('maintenance-ai'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'maintenance-ai' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Maintenance AI Chat
-          </button>
+          {currentUser.role === 'engineer' && (
+            <button 
+              onClick={() => { setActiveTab('maintenance-ai'); setMobileMenuOpen(false); }}
+              className={`py-2.5 text-left text-sm ${activeTab === 'maintenance-ai' ? 'text-[#9cd2b8] font-bold' : ''}`}
+            >
+              Maintenance AI Chat
+            </button>
+          )}
           <button 
             onClick={() => { setActiveTab('tickets'); setMobileMenuOpen(false); }}
             className={`py-2.5 text-left text-sm ${activeTab === 'tickets' ? 'text-[#9cd2b8] font-bold' : ''}`}
@@ -430,6 +436,12 @@ export default function App() {
             className={`py-2.5 text-left text-sm ${activeTab === 'personnel' ? 'text-[#9cd2b8] font-bold' : ''}`}
           >
             Personnel Roster
+          </button>
+          <button 
+            onClick={() => { setActiveTab('mail-system'); setMobileMenuOpen(false); }}
+            className={`py-2.5 text-left text-sm ${activeTab === 'mail-system' ? 'text-[#9cd2b8] font-bold' : ''}`}
+          >
+            Mail System
           </button>
           <button 
             onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
