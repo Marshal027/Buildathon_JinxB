@@ -103,17 +103,7 @@ export default function SideNavBar({
           </button>
         )}
 
-        <button
-          onClick={() => setActiveTab('personnel')}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-            activeTab === 'personnel'
-              ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-              : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-          }`}
-        >
-          <Users className="w-4 h-4 text-inherit" />
-          Personnel Roster
-        </button>
+
 
         {currentUser.role !== 'engineer' && (
           <button

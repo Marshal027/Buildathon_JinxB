@@ -734,12 +734,7 @@ export default function App() {
           />
         );
       case 'personnel':
-        return (
-          <PersonnelPage 
-            attendance={attendance}
-            workerLocations={workerLocations}
-          />
-        );
+        return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Personnel Roster has been disabled.</div>;
       case 'mail-system':
         if (currentUser.role === 'engineer') {
           return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
@@ -854,12 +849,7 @@ export default function App() {
               Tickets Explorer
             </button>
           )}
-          <button 
-            onClick={() => { setActiveTab('personnel'); setMobileMenuOpen(false); }}
-            className={`py-2.5 text-left text-sm ${activeTab === 'personnel' ? 'text-[#9cd2b8] font-bold' : ''}`}
-          >
-            Personnel Roster
-          </button>
+
           {currentUser.role !== 'engineer' && (
             <button 
               onClick={() => { setActiveTab('mail-system'); setMobileMenuOpen(false); }}
