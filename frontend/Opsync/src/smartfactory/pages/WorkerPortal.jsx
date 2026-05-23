@@ -51,12 +51,12 @@ export default function WorkerPortal({
       <div className="w-full lg:w-96 flex flex-col gap-5 pr-1 font-sans shrink-0">
         
         {/* GPS Control Panel */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-[#cbc3d9]" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Simulated GPS Coordinates</h3>
           </div>
-          <p className="text-[11px] text-[#cac5cc]/60 leading-relaxed">
+          <p className="text-[11px] text-[#ffffff]/60 leading-relaxed">
             Configure the simulated operator phone GPS coordinates to test the geofence authorization rules constraints.
           </p>
 
@@ -65,7 +65,7 @@ export default function WorkerPortal({
               <button
                 onClick={() => setIsInFactory(true)}
                 className={`flex-1 py-1.5 rounded-lg cursor-pointer font-semibold transition-all ${
-                  isInFactory ? 'bg-[#9cd2b8] text-black font-bold' : 'text-[#cac5cc]'
+                  isInFactory ? 'bg-[#9cd2b8] text-black font-bold' : 'text-[#ffffff]'
                 }`}
               >
                 Inside geofence
@@ -73,14 +73,14 @@ export default function WorkerPortal({
               <button
                 onClick={() => setIsInFactory(false)}
                 className={`flex-1 py-1.5 rounded-lg cursor-pointer font-semibold transition-all ${
-                  !isInFactory ? 'bg-red-950/40 border border-[#ffb4ab]/30 text-[#ffb4ab]' : 'text-[#cac5cc]'
+                  !isInFactory ? 'bg-red-950/40 border border-[#ffb4ab]/30 text-[#ffb4ab]' : 'text-[#ffffff]'
                 }`}
               >
                 Outside factory
               </button>
             </div>
 
-            <div className="p-3 bg-black/40 border border-white/5 rounded-xl font-mono text-[11px] flex flex-col gap-1.5 text-[#cac5cc]/70">
+            <div className="p-3 bg-black/40 border border-white/5 rounded-xl font-mono text-[11px] flex flex-col gap-1.5 text-[#ffffff]/70">
               <div className="flex justify-between">
                 <span>Latitude:</span>
                 <span className="text-white font-semibold">{simLat.toFixed(6)}</span>
@@ -105,7 +105,7 @@ export default function WorkerPortal({
             <ShieldAlert className="w-4 h-4 text-[#ffb4ab] animate-bounce" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#ffb4ab]">Operator Emergency SOS</h3>
           </div>
-          <p className="text-[11px] text-[#cac5cc]/60 leading-relaxed">
+          <p className="text-[11px] text-[#ffffff]/60 leading-relaxed">
             Distress broadcasts bypass generic protocols, immediately triggering persistent visual alerts with GPS details direct to manager panels.
           </p>
 
@@ -142,7 +142,7 @@ export default function WorkerPortal({
           <div className="flex-1 bg-[#141314] rounded-[28px] overflow-hidden flex flex-col p-4 pt-10 gap-5 relative">
             
             {/* Top Bar Indicators */}
-            <div className="flex justify-between text-[11px] font-mono text-[#cac5cc]/60 select-none pb-2 border-b border-white/5">
+            <div className="flex justify-between text-[11px] font-mono text-[#ffffff]/60 select-none pb-2 border-b border-white/5">
               <span>opp sync Mobile</span>
               <div className="flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
@@ -157,7 +157,7 @@ export default function WorkerPortal({
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-white tracking-tight uppercase">J. Kowalski</span>
-                <span className="text-[10px] text-[#cac5cc]/60">Assembly Section A Operator</span>
+                <span className="text-[10px] text-[#ffffff]/60">Assembly Section A Operator</span>
               </div>
             </div>
 
@@ -177,7 +177,7 @@ export default function WorkerPortal({
 
                   <div className="text-center font-sans">
                     <span className="text-xs font-bold text-[#9cd2b8] uppercase block tracking-wider">Active Session Logging</span>
-                    <span className="text-[10px] text-[#cac5cc]/60 font-mono">Clock In: {new Date(activeRecord.clockIn).toLocaleTimeString()}</span>
+                    <span className="text-[10px] text-[#ffffff]/60 font-mono">Clock In: {new Date(activeRecord.clockIn).toLocaleTimeString()}</span>
                     
                     {/* Radius verified icon */}
                     <div className="mt-2.5 p-1 px-2 text-[9px] bg-emerald-900/20 text-[#9cd2b8] rounded border border-[#9cd2b8]/30 flex items-center gap-1.5 justify-center">
@@ -198,13 +198,13 @@ export default function WorkerPortal({
                 <div className="flex flex-col items-center gap-4">
                   
                   {/* Status animation standby */}
-                  <div className="w-28 h-28 rounded-full bg-white/5 border border-[#cac5cc]/15 flex items-center justify-center relative">
-                    <Clock className="w-10 h-10 text-[#cac5cc]/40" />
+                  <div className="w-28 h-28 rounded-full bg-white/5 border border-[#ffffff]/15 flex items-center justify-center relative">
+                    <Clock className="w-10 h-10 text-[#ffffff]/40" />
                   </div>
 
                   <div className="text-center font-sans">
                     <span className="text-xs font-bold text-white uppercase block tracking-wider">Session Suspended</span>
-                    <p className="text-[10px] text-[#cac5cc]/50 max-w-[200px] mt-0.5">Please clock in to stream device coordinates safely within geofenced boundaries.</p>
+                    <p className="text-[10px] text-[#ffffff]/50 max-w-[200px] mt-0.5">Please clock in to stream device coordinates safely within geofenced boundaries.</p>
                   </div>
 
                   <button
@@ -221,7 +221,7 @@ export default function WorkerPortal({
             </div>
 
             {/* Mini prompt reminder */}
-            <div className="p-3 bg-[#1c1b1d]/85 rounded-xl border border-white/5 text-[10px] text-[#cac5cc]/60 leading-relaxed text-center font-mono">
+            <div className="p-3 bg-[#1c1b1d]/85 rounded-xl border border-white/5 text-[10px] text-[#ffffff]/60 leading-relaxed text-center font-mono">
               GPS Lock coords: {simLat.toFixed(4)}, {simLng.toFixed(4)}
             </div>
 

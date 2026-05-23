@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "OppSync Smart Camera",
+    "slug": "oppsync-smart-camera",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "OppSync needs camera access to serve as a smart security feed."
+      }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
+    }
+  }
+}

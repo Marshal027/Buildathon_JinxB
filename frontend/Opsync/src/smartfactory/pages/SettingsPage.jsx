@@ -24,13 +24,13 @@ export default function SettingsPage() {
           <SettingsIcon className="w-5 h-5 text-[#9cd2b8]" />
           System Parameter Configurations
         </h2>
-        <p className="text-xs text-[#cac5cc]/60 mt-0.5">Adjust diagnostic thresholds and physical safety geofences</p>
+        <p className="text-xs text-[#ffffff]/60 mt-0.5">Adjust diagnostic thresholds and physical safety geofences</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
         
         {/* Panel 1: Predictive sensitivity */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-[#9cd2b8]" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Fault Diagnosis Scanners</h3>
@@ -40,7 +40,7 @@ export default function SettingsPage() {
             {/* Slider 1 */}
             <div className="flex flex-col">
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#cac5cc]">Anomaly Detection Sensitivity</span>
+                <span className="text-[#ffffff]">Anomaly Detection Sensitivity</span>
                 <span className="font-mono font-bold text-white">{sensitivity}%</span>
               </div>
               <input 
@@ -51,13 +51,13 @@ export default function SettingsPage() {
                 onChange={(e) => setSensitivity(Number(e.target.value))}
                 className="w-full accent-[#9cd2b8] h-1 bg-[#2b292b] rounded-lg cursor-pointer"
               />
-              <span className="text-[10px] text-[#cac5cc]/50 mt-1">Increasing threshold triggers quicker incident predictions.</span>
+              <span className="text-[10px] text-[#ffffff]/50 mt-1">Increasing threshold triggers quicker incident predictions.</span>
             </div>
 
             {/* Slider 2 */}
             <div className="flex flex-col mt-2">
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-[#cac5cc]">Telemetry Poll Interval</span>
+                <span className="text-[#ffffff]">Telemetry Poll Interval</span>
                 <span className="font-mono font-bold text-white">{reportRate} seconds</span>
               </div>
               <input 
@@ -80,16 +80,16 @@ export default function SettingsPage() {
                 onChange={(e) => setAutoTriage(e.target.checked)}
                 className="accent-[#9cd2b8] w-4 h-4 rounded cursor-pointer"
               />
-              <div className="flex flex-col text-xs text-[#cac5cc]">
+              <div className="flex flex-col text-xs text-[#ffffff]">
                 <span className="font-semibold text-white">Autonomous AI Defect Escalation</span>
-                <span className="text-[10px] text-[#cac5cc]/60">Allow tickets to be generated automatically based on thermal breaches.</span>
+                <span className="text-[10px] text-[#ffffff]/60">Allow tickets to be generated automatically based on thermal breaches.</span>
               </div>
             </label>
           </div>
         </div>
 
         {/* Panel 2: Biometrics authentication & integrations */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-cyan-400" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Biometric Credentials & Access</h3>
@@ -105,9 +105,9 @@ export default function SettingsPage() {
                 onChange={(e) => setBiometrics(e.target.checked)}
                 className="accent-cyan-400 w-4 h-4 rounded cursor-pointer"
               />
-              <div className="flex flex-col text-xs text-[#cac5cc]">
+              <div className="flex flex-col text-xs text-[#ffffff]">
                 <span className="font-semibold text-white">Biometric Quick Clock-In</span>
-                <span className="text-[10px] text-[#cac5cc]/60">Authenticate clock events via standard mobile biometric face-scan.</span>
+                <span className="text-[10px] text-[#ffffff]/60">Authenticate clock events via standard mobile biometric face-scan.</span>
               </div>
             </label>
 
@@ -115,7 +115,7 @@ export default function SettingsPage() {
 
             {/* Integrations state checks */}
             <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-mono text-[#cac5cc]/50 uppercase">Active Integrations Check</span>
+              <span className="text-[10px] font-mono text-[#ffffff]/50 uppercase">Active Integrations Check</span>
               
               <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">

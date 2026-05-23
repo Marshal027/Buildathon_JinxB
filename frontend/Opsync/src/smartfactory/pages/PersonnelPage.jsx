@@ -42,15 +42,15 @@ export default function PersonnelPage({ attendance, workerLocations }) {
     <div className="flex flex-col lg:flex-row gap-6 h-full p-4 lg:p-6 overflow-hidden max-w-[1600px] mx-auto w-full">
       
       {/* LEFT COLUMN: Spatial locator workforce canvas */}
-      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl overflow-hidden min-h-[420px]">
+      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl overflow-hidden min-h-[420px]">
         {/* Header */}
-        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#cac5cc]/10 flex items-center justify-between select-none">
+        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#ffffff]/10 flex items-center justify-between select-none">
           <div>
             <h3 className="text-sm font-semibold text-white uppercase flex items-center gap-2">
               <Map className="w-4 h-4 text-[#9cd2b8]" />
               Workforce Spatial Density Tracker
             </h3>
-            <p className="text-[11px] text-[#cac5cc]/60">Geofenced radar map of active floor personnel</p>
+            <p className="text-[11px] text-[#ffffff]/60">Geofenced radar map of active floor personnel</p>
           </div>
           <span className="text-[11px] font-mono text-[#9cd2b8] animate-pulse">Live Tracking Enabled</span>
         </div>
@@ -71,8 +71,8 @@ export default function PersonnelPage({ attendance, workerLocations }) {
             <div className="w-56 h-56 rounded-full border border-cyan-400/5 pointer-events-none"></div>
           </div>
 
-          <div className="absolute inset-4 border border-[#cac5cc]/10 rounded-xl relative w-full h-full p-10">
-            <span className="absolute left-4 top-4 text-[9px] font-mono uppercase text-[#cac5cc]/40">[ GEOFENCED ZONE RECTANGLE: 200m CENTER ]</span>
+          <div className="absolute inset-4 border border-[#ffffff]/10 rounded-xl relative w-full h-full p-10">
+            <span className="absolute left-4 top-4 text-[9px] font-mono uppercase text-[#ffffff]/40">[ GEOFENCED ZONE RECTANGLE: 200m CENTER ]</span>
 
             {/* Workers pins overlay */}
             {workerLocations.map((worker) => {
@@ -112,11 +112,11 @@ export default function PersonnelPage({ attendance, workerLocations }) {
         </div>
 
         {/* Live Attendance Table listing */}
-        <div className="p-4 bg-[#111]/90 border-t border-[#cac5cc]/10 flex flex-col gap-2 shrink-0">
+        <div className="p-4 bg-[#111]/90 border-t border-[#ffffff]/10 flex flex-col gap-2 shrink-0">
           <div className="flex items-center justify-between text-xs mb-1">
             <span className="font-semibold text-white">Attendance Verification Logs</span>
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-[#cac5cc]/50 absolute left-2 top-1/2 transform -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[#ffffff]/50 absolute left-2 top-1/2 transform -translate-y-1/2" />
               <input 
                 type="text" 
                 placeholder="Search roster..."
@@ -128,9 +128,9 @@ export default function PersonnelPage({ attendance, workerLocations }) {
           </div>
 
           <div className="overflow-x-auto max-h-[160px]">
-            <table className="w-full text-left font-mono text-[10px] text-[#cac5cc]/75 border-collapse">
+            <table className="w-full text-left font-mono text-[10px] text-[#ffffff]/75 border-collapse">
               <thead>
-                <tr className="border-b border-[#cac5cc]/10 text-[#cac5cc]/40">
+                <tr className="border-b border-[#ffffff]/10 text-[#ffffff]/40">
                   <th className="pb-1 text-left font-medium">Worker ID</th>
                   <th className="pb-1 text-left font-medium">Staff Name</th>
                   <th className="pb-1 text-left font-medium">Clock In Time</th>
@@ -167,7 +167,7 @@ export default function PersonnelPage({ attendance, workerLocations }) {
       <div className="w-full lg:w-96 flex flex-col gap-5 select-none shrink-0 pb-4 pr-1">
         
         {/* shift swap panel request drawer */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[#cbc3d9]" />
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Shift Switching Queue</h3>
@@ -181,10 +181,10 @@ export default function PersonnelPage({ attendance, workerLocations }) {
               >
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-white uppercase">{swap.requester}</span>
-                  <span className="text-[10px] font-mono text-[#cac5cc]/40">{swap.role}</span>
+                  <span className="text-[10px] font-mono text-[#ffffff]/40">{swap.role}</span>
                 </div>
 
-                <div className="text-[11px] text-[#cac5cc]/75 flex flex-col gap-0.5 leading-relaxed">
+                <div className="text-[11px] text-[#ffffff]/75 flex flex-col gap-0.5 leading-relaxed">
                   <div>Wants to trade: <strong className="text-white font-mono">{swap.swapShift}</strong></div>
                   <div>Assigned Cover: <span className="text-white font-mono">{swap.targetWorker}</span></div>
                 </div>
@@ -220,9 +220,9 @@ export default function PersonnelPage({ attendance, workerLocations }) {
         </div>
 
         {/* Module 2: Workforce instructions desk */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-2 leading-relaxed">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-2 leading-relaxed">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">Location Policy Status</span>
-          <p className="text-[11px] text-[#cac5cc]/60 leading-relaxed">
+          <p className="text-[11px] text-[#ffffff]/60 leading-relaxed">
             All active personnel are geofenced against the coordinates: <strong>37.7749 Lat, -122.4194 Lng</strong>. Clock-ins from outside the factory threshold line are marked as OOB (Out-of-bounds) safety violations.
           </p>
         </div>

@@ -27,7 +27,7 @@ export default function MachineHealthPage({
             <Cpu className="w-5 h-5 text-[#9cd2b8]" />
             Machine Telemetry Controller
           </h2>
-          <p className="text-xs text-[#cac5cc]/60 mt-0.5">Physical telemetry map mapped with live coordinate status trackers</p>
+          <p className="text-xs text-[#ffffff]/60 mt-0.5">Physical telemetry map mapped with live coordinate status trackers</p>
         </div>
 
         {/* Filters and search blocks */}
@@ -35,7 +35,7 @@ export default function MachineHealthPage({
           
           {/* Search */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-[#cac5cc]/50 absolute left-3 top-1/2 transform -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#ffffff]/50 absolute left-3 top-1/2 transform -translate-y-1/2" />
             <input 
               type="text"
               placeholder="Search assets by ID / Name..."
@@ -50,7 +50,7 @@ export default function MachineHealthPage({
             <select 
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs text-[#cac5cc] px-1 cursor-pointer focus:outline-none"
+              className="bg-transparent text-xs text-[#ffffff] px-1 cursor-pointer focus:outline-none"
             >
               <option value="all">All Statuses</option>
               <option value="online">Nominal</option>

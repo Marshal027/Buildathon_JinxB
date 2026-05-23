@@ -34,4 +34,8 @@ urlpatterns = [
     # Chatbot
     path('chatbot/sessions', views.chat_sessions_list),
     path('chatbot/message', views.chat_message_create),
+
+    # Mobile Camera Feed
+    path('camera/frame', views.camera_frame_upload),
+    path('camera/latest', views.camera_latest_frame),
 ]

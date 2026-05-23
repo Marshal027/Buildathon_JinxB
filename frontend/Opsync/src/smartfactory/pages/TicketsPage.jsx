@@ -85,18 +85,18 @@ export default function TicketsPage({
     <div className="flex flex-col lg:flex-row gap-6 h-full p-4 lg:p-6 overflow-hidden max-w-[1600px] mx-auto w-full">
       
       {/* LEFT COLUMN: Active Tickets list */}
-      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl overflow-hidden">
         
         {/* Ticket Header lists */}
-        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#cac5cc]/10 flex items-center justify-between select-none">
+        <div className="p-4 bg-gradient-to-r from-[#201f21] to-[#242325] border-b border-[#ffffff]/10 flex items-center justify-between select-none">
           <div>
             <h3 className="text-sm font-semibold text-white uppercase flex items-center gap-2">
               <Ticket className="w-4 h-4 text-[#9cd2b8]" />
               Active System Tickets Registry
             </h3>
-            <p className="text-[11px] text-[#cac5cc]/60">Fault logs triggered by diagnostic watchdogs and staff</p>
+            <p className="text-[11px] text-[#ffffff]/60">Fault logs triggered by diagnostic watchdogs and staff</p>
           </div>
-          <span className="text-[11px] font-mono text-white/50 bg-[#141314]/50 px-2 py-1 rounded border border-[#cac5cc]/10">
+          <span className="text-[11px] font-mono text-white/50 bg-[#141314]/50 px-2 py-1 rounded border border-[#ffffff]/10">
             {tickets.length} Active Records
           </span>
         </div>
@@ -135,16 +135,16 @@ export default function TicketsPage({
                   </div>
 
                   <h4 className="text-xs font-bold text-white mt-2 leading-snug truncate uppercase">{t.machineName} Directive</h4>
-                  <p className="text-[11px] text-[#cac5cc]/75 line-clamp-2 mt-1 leading-relaxed font-sans">{t.issueDescription}</p>
+                  <p className="text-[11px] text-[#ffffff]/75 line-clamp-2 mt-1 leading-relaxed font-sans">{t.issueDescription}</p>
 
-                  <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-white/5 text-[10px] font-mono text-[#cac5cc]/50">
+                  <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-white/5 text-[10px] font-mono text-[#ffffff]/50">
                     <div className="flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-[#cac5cc]/40" />
+                      <User className="w-3.5 h-3.5 text-[#ffffff]/40" />
                       <span>{t.assignedTo || 'Unassigned'}</span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <CheckSquare className="w-3.5 h-3.5 text-[#cac5cc]/40" />
+                      <CheckSquare className="w-3.5 h-3.5 text-[#ffffff]/40" />
                       <span>Checklist: {worksDone}/{worksCount}</span>
                     </div>
                   </div>
@@ -161,8 +161,8 @@ export default function TicketsPage({
         
         {/* Ticket Details summary inspector card */}
         {selectedTicket ? (
-          <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
-            <div className="flex justify-between items-start border-b border-[#cac5cc]/10 pb-3">
+          <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
+            <div className="flex justify-between items-start border-b border-[#ffffff]/10 pb-3">
               <div>
                 <span className="text-[10px] font-mono text-[#9cd2b8] block tracking-wider font-semibold">TICKET LOGS DETAILS</span>
                 <h3 className="text-sm font-bold text-white mt-0.5">{selectedTicket.id}: {selectedTicket.machineName}</h3>
@@ -182,7 +182,7 @@ export default function TicketsPage({
 
             {/* Checklist inspector checkbox */}
             <div className="flex flex-col gap-2">
-              <span className="text-[11px] font-mono text-[#cac5cc]/60 uppercase tracking-wider block">Assurance Checklist</span>
+              <span className="text-[11px] font-mono text-[#ffffff]/60 uppercase tracking-wider block">Assurance Checklist</span>
               <div className="flex flex-col gap-2 mt-1">
                 {selectedTicket.checklist?.length === 0 ? (
                   <span className="text-xs text-neutral-500 font-mono">No checklist needed.</span>
@@ -196,7 +196,7 @@ export default function TicketsPage({
                       {item.done ? (
                         <CheckCircle className="w-4 h-4 text-[#9cd2b8] shrink-0 fill-[#9cd2b8]/10" />
                       ) : (
-                        <div className="w-4 h-4 rounded border border-[#cac5cc]/40 shrink-0" />
+                        <div className="w-4 h-4 rounded border border-[#ffffff]/40 shrink-0" />
                       )}
                       <span className={`transition-all ${item.done ? 'line-through text-white/40' : 'text-white'}`}>
                         {item.text}
@@ -207,11 +207,11 @@ export default function TicketsPage({
               </div>
             </div>
 
-            <div className="border-t border-[#cac5cc]/10 my-1"></div>
+            <div className="border-t border-[#ffffff]/10 my-1"></div>
 
             {/* Interactive Actions button drawers */}
             <div className="flex flex-col gap-2.5">
-              <span className="text-[11px] font-mono text-[#cac5cc]/60 uppercase tracking-wider block">Telemetric Control Action</span>
+              <span className="text-[11px] font-mono text-[#ffffff]/60 uppercase tracking-wider block">Telemetric Control Action</span>
               
               <div className="grid grid-cols-2 gap-2 mt-1">
                 {selectedTicket.status !== 'resolved' && (
@@ -251,23 +251,23 @@ export default function TicketsPage({
             </div>
           </div>
         ) : (
-          <div className="p-8 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col items-center justify-center text-center text-[#cac5cc]/50">
+          <div className="p-8 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col items-center justify-center text-center text-[#ffffff]/50">
             <Ticket className="w-10 h-10 text-neutral-600 mb-2 animate-spin" style={{ animationDuration: '4s' }} />
             <h4 className="text-sm font-semibold text-white">No Tickets Active</h4>
           </div>
         )}
 
         {/* Create Manual Ticket form drawer */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">File Manual Telemetric Defect</span>
           
           <form onSubmit={handleCreateTicketSubmit} className="flex flex-col gap-3">
             <div>
-              <label className="text-[10px] uppercase font-mono tracking-wider text-[#cac5cc]/60 mb-1 block">Defect Name Title</label>
+              <label className="text-[10px] uppercase font-mono tracking-wider text-[#ffffff]/60 mb-1 block">Defect Name Title</label>
               <input 
                 type="text"
                 placeholder="e.g. Unusual belt vibration"
-                className="w-full text-xs p-2.5 rounded-lg bg-black/45 border border-[#cac5cc]/10 focus:outline-none focus:border-[#9cd2b8] text-white placeholder-neutral-500"
+                className="w-full text-xs p-2.5 rounded-lg bg-black/45 border border-[#ffffff]/10 focus:outline-none focus:border-[#9cd2b8] text-white placeholder-neutral-500"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
               />
@@ -275,9 +275,9 @@ export default function TicketsPage({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[10px] uppercase font-mono tracking-wider text-[#cac5cc]/60 mb-1 block">Target Machine</label>
+                <label className="text-[10px] uppercase font-mono tracking-wider text-[#ffffff]/60 mb-1 block">Target Machine</label>
                 <select 
-                  className="w-full text-xs p-2.5 rounded-lg bg-[#242325] border border-[#cac5cc]/10 focus:outline-none text-[#cac5cc]"
+                  className="w-full text-xs p-2.5 rounded-lg bg-[#242325] border border-[#ffffff]/10 focus:outline-none text-[#ffffff]"
                   value={newMachineId}
                   onChange={(e) => setNewMachineId(e.target.value)}
                 >
@@ -287,9 +287,9 @@ export default function TicketsPage({
               </div>
 
               <div>
-                <label className="text-[10px] uppercase font-mono tracking-wider text-[#cac5cc]/60 mb-1 block">Defect Priority</label>
+                <label className="text-[10px] uppercase font-mono tracking-wider text-[#ffffff]/60 mb-1 block">Defect Priority</label>
                 <select 
-                  className="w-full text-xs p-2.5 rounded-lg bg-[#242325] border border-[#cac5cc]/10 focus:outline-none text-[#cac5cc]"
+                  className="w-full text-xs p-2.5 rounded-lg bg-[#242325] border border-[#ffffff]/10 focus:outline-none text-[#ffffff]"
                   value={newSeverity || 'complex'}
                   onChange={(e) => setNewSeverity(e.target.value)}
                 >
@@ -301,10 +301,10 @@ export default function TicketsPage({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-mono tracking-wider text-[#cac5cc]/60 mb-1 block">Detailed Symptoms Description</label>
+              <label className="text-[10px] uppercase font-mono tracking-wider text-[#ffffff]/60 mb-1 block">Detailed Symptoms Description</label>
               <textarea 
                 placeholder="Describe diagnostic parameters noticed..."
-                className="w-full text-xs p-2.5 rounded-lg bg-black/45 border border-[#cac5cc]/10 focus:outline-none focus:border-[#9cd2b8] text-white placeholder-neutral-500 resize-none h-16"
+                className="w-full text-xs p-2.5 rounded-lg bg-black/45 border border-[#ffffff]/10 focus:outline-none focus:border-[#9cd2b8] text-white placeholder-neutral-500 resize-none h-16"
                 value={newDesc}
                 onChange={(e) => setNewDesc(e.target.value)}
               />

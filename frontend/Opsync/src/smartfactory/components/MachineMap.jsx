@@ -116,16 +116,16 @@ export default function MachineMap({
     <div className="flex flex-col lg:flex-row gap-6 h-full min-h-0">
       
       {/* Dynamic Factory Map Board Canvas */}
-      <div className="flex-1 flex flex-col bg-[#0c0c0e]/95 border border-[#cac5cc]/10 rounded-2xl relative overflow-hidden min-h-[550px] shadow-[0_12px_32px_rgba(0,0,0,0.4)]">
+      <div className="flex-1 flex flex-col bg-[#0c0c0e]/95 border border-[#ffffff]/10 rounded-2xl relative overflow-hidden min-h-[550px] shadow-[0_12px_32px_rgba(0,0,0,0.4)]">
         
         {/* Floor Map Title and Control Headers */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-b border-[#cac5cc]/10 z-10 backdrop-blur-[12px] bg-black/40 gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-b border-[#ffffff]/10 z-10 backdrop-blur-[12px] bg-black/40 gap-3">
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               <Compass className="w-4 h-4 text-[#9cd2b8] animate-spin" style={{ animationDuration: '10s' }} />
               Live Interactive Floor Plan Blueprint
             </h3>
-            <p className="text-xs text-[#cac5cc]/60">Physical asset spatial registry, geofenced zones and real-time conveyor vectors</p>
+            <p className="text-xs text-[#ffffff]/60">Physical asset spatial registry, geofenced zones and real-time conveyor vectors</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -195,7 +195,7 @@ export default function MachineMap({
                 type="button"
                 onClick={() => setZoomLevel(prev => Math.min(prev + 0.15, 2.0))} 
                 title="Zoom In"
-                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#cac5cc] hover:text-[#9cd2b8]"
+                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#ffffff] hover:text-[#9cd2b8]"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
               </button>
@@ -203,7 +203,7 @@ export default function MachineMap({
                 type="button"
                 onClick={() => setZoomLevel(prev => Math.max(prev - 0.15, 0.75))} 
                 title="Zoom Out"
-                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#cac5cc] hover:text-[#9cd2b8]"
+                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#ffffff] hover:text-[#9cd2b8]"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
@@ -211,7 +211,7 @@ export default function MachineMap({
                 type="button"
                 onClick={() => { setZoomLevel(1); setPanOffset({ x: 0, y: 0 }); setCurrentPreset('all'); }} 
                 title="Reset Camera focus"
-                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#cac5cc] hover:text-[#9cd2b8]"
+                className="p-1 rounded bg-white/5 hover:bg-white/10 text-[#ffffff] hover:text-[#9cd2b8]"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
               </button>
@@ -298,7 +298,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="6" y="6" width="34" height="40" 
-                  className={`transition-colors duration-500 rounded-lg ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('A-1')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 rounded-lg ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('A-1')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="8" y="10" fill="#9cd2b8" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE A-1: CNC PRECISION MACHINING</text>
                 {/* Structural benches inside Zone A-1 */}
@@ -314,7 +314,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="45" y="6" width="20" height="40" 
-                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('B-1')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('B-1')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="47" y="10" fill="#b0cbd8" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE B-1: QUALITY SENSORS</text>
                 {/* Circular scanner workspace display */}
@@ -328,7 +328,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="68" y="6" width="26" height="40" 
-                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('C-1')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('C-1')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="70" y="10" fill="#f4bc59" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE C-1: PACKING & OUTFLOW</text>
                 {/* Cargo shelf racks */}
@@ -345,7 +345,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="6" y="53" width="34" height="41" 
-                  className={`transition-colors duration-500 rounded-lg ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('A-2')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 rounded-lg ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('A-2')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="8" y="57" fill="#cbc3d9" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE A-2: SYSTEM INFRASTRUCTURE</text>
                 {/* Secondary coolants tubes representation */}
@@ -359,7 +359,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="43" y="53" width="22" height="41" 
-                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('B-2')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('B-2')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="45" y="57" fill="#b0cbd8" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE B-2: ROBOT WELDING</text>
                 {/* Safety fences inside robot cell */}
@@ -373,7 +373,7 @@ export default function MachineMap({
               <g>
                 <rect 
                   x="68" y="53" width="26" height="41" 
-                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('D-1')) : 'fill-[#1c1b1d]/20'} stroke-[#cac5cc]/15 stroke-width-[0.25]`} 
+                  className={`transition-colors duration-500 ${layoutMode === 'thermal' ? getZoneColorClass(getZoneStatus('D-1')) : 'fill-[#1c1b1d]/20'} stroke-[#ffffff]/15 stroke-width-[0.25]`} 
                 />
                 <text x="70" y="57" fill="#cbc3d9" fontSize="1.5" fontWeight="bold" fontFamily="monospace">ZONE D-1: EXTRUSION LINE</text>
                 {/* Cylindrical extrusion coil coils */}
@@ -462,7 +462,7 @@ export default function MachineMap({
                     <div>Location: <span className="text-[#9cd2b8] font-bold">{coord.zone}</span></div>
                     <div>Health Coefficient: <span className="text-cyan-400 font-bold">{machine.healthScore}%</span></div>
                     <div>Current Temp: <span className="text-amber-400">{machine.temp || 45}°C</span></div>
-                    <div className="text-[9px] text-[#cac5cc]/50 mt-1 uppercase italic">{coord.desc}</div>
+                    <div className="text-[9px] text-[#ffffff]/50 mt-1 uppercase italic">{coord.desc}</div>
                   </div>
                 </div>
               );
@@ -471,9 +471,9 @@ export default function MachineMap({
         </div>
 
         {/* Dynamic Status Legend with Blueprint metrics */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-4 py-3 bg-[#0a0a0b]/90 border-t border-[#cac5cc]/10 text-xs gap-3 font-mono">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-4 py-3 bg-[#0a0a0b]/90 border-t border-[#ffffff]/10 text-xs gap-3 font-mono">
           <div className="flex flex-wrap gap-4 items-center">
-            <span className="text-[#cac5cc]/60 uppercase tracking-wider text-[10px] font-bold">STATUS LEGEND:</span>
+            <span className="text-[#ffffff]/60 uppercase tracking-wider text-[10px] font-bold">STATUS LEGEND:</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-[#9cd2b8]"></span> Nominal (Online)</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-[#f4bc59]"></span> Outrange Alerts (Warning)</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-[#ffb4ab]"></span> System Halt (Offline)</span>
@@ -488,12 +488,12 @@ export default function MachineMap({
       </div>
 
       {/* Side Details Collapsible Calibration Panel */}
-      <div className="w-full lg:w-96 flex flex-col bg-[#141314]/45 border border-[#cac5cc]/10 rounded-2xl overflow-hidden shadow-xl transition-all duration-300">
+      <div className="w-full lg:w-96 flex flex-col bg-[#141314]/45 border border-[#ffffff]/10 rounded-2xl overflow-hidden shadow-xl transition-all duration-300">
         {selectedMachine ? (
           <div className="flex-1 flex flex-col h-full">
             
             {/* Panel Title */}
-            <div className="p-4 bg-gradient-to-r from-[#1c1b1d] to-[#141314] border-b border-[#cac5cc]/10 flex items-center justify-between">
+            <div className="p-4 bg-gradient-to-r from-[#1c1b1d] to-[#141314] border-b border-[#ffffff]/10 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono text-[#9cd2b8] tracking-widest block uppercase">Telemetry Registry Node</span>
                 <h4 className="text-sm font-bold text-white uppercase">{selectedMachine.name}</h4>
@@ -505,7 +505,7 @@ export default function MachineMap({
             </div>
 
             {/* Machine Preview Image */}
-            <div className="w-full h-36 bg-black/40 border-b border-[#cac5cc]/10 flex items-center justify-center overflow-hidden relative select-none">
+            <div className="w-full h-36 bg-black/40 border-b border-[#ffffff]/10 flex items-center justify-center overflow-hidden relative select-none">
               <img 
                 src={selectedMachine.id === 'ASM-001' || selectedMachine.id === 'ROB-112' || selectedMachine.id === 'M-402' ? '/machine1.png' :
                      selectedMachine.id === 'P-114' || selectedMachine.id === 'EX-02' || selectedMachine.id === 'CLS-042' ? '/machine2.png' : '/machine3.png'} 
@@ -518,18 +518,18 @@ export default function MachineMap({
             </div>
 
             {/* Quick telemetry tab control header */}
-            <div className="grid grid-cols-2 text-center text-xs border-b border-[#cac5cc]/10">
+            <div className="grid grid-cols-2 text-center text-xs border-b border-[#ffffff]/10">
               <button 
                 type="button"
                 onClick={() => setActiveTab('status')}
-                className={`py-2 px-4 cursor-pointer font-semibold ${activeTab === 'status' ? 'text-[#9cd2b8] border-b-2 border-[#9cd2b8] bg-[#9cd2b8]/5' : 'text-[#cac5cc]/60 hover:text-white'}`}
+                className={`py-2 px-4 cursor-pointer font-semibold ${activeTab === 'status' ? 'text-[#9cd2b8] border-b-2 border-[#9cd2b8] bg-[#9cd2b8]/5' : 'text-[#ffffff]/60 hover:text-white'}`}
               >
                 Status Indicators
               </button>
               <button 
                 type="button"
                 onClick={() => setActiveTab('analytics')}
-                className={`py-2 px-4 cursor-pointer font-semibold ${activeTab === 'analytics' ? 'text-[#9cd2b8] border-b-2 border-[#9cd2b8] bg-[#9cd2b8]/5' : 'text-[#cac5cc]/60 hover:text-white'}`}
+                className={`py-2 px-4 cursor-pointer font-semibold ${activeTab === 'analytics' ? 'text-[#9cd2b8] border-b-2 border-[#9cd2b8] bg-[#9cd2b8]/5' : 'text-[#ffffff]/60 hover:text-white'}`}
               >
                 Calibration Override
               </button>
@@ -541,7 +541,7 @@ export default function MachineMap({
                 <>
                   {/* Gauge bars */}
                   <div className="flex flex-col gap-3">
-                    <span className="text-[11px] font-mono text-[#cac5cc]/60 uppercase tracking-wider block">Live Spatial Sensors</span>
+                    <span className="text-[11px] font-mono text-[#ffffff]/60 uppercase tracking-wider block">Live Spatial Sensors</span>
                     
                     {/* Gauge 1: Temperature */}
                     <div className="p-3 bg-[#1c1b1d] border border-white/5 rounded-xl flex items-center gap-3">
@@ -549,7 +549,7 @@ export default function MachineMap({
                       <div className="flex-1">
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-white/80 font-mono text-[11px]">THERMAL THRESHOLD</span>
-                          <span className={`${(selectedMachine.temp || 0) > 100 ? 'text-[#ffb4ab] font-bold' : 'text-[#cac5cc]/80 font-mono'}`}>{selectedMachine.temp || 45}°C</span>
+                          <span className={`${(selectedMachine.temp || 0) > 100 ? 'text-[#ffb4ab] font-bold' : 'text-[#ffffff]/80 font-mono'}`}>{selectedMachine.temp || 45}°C</span>
                         </div>
                         <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
                           <div 
@@ -569,7 +569,7 @@ export default function MachineMap({
                       <div className="flex-1">
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-white/80 font-mono text-[11px]">VIBRATION FREQUENCY</span>
-                          <span className="text-[#cac5cc]/80 font-mono">{selectedMachine.vibration || 12} mm/s</span>
+                          <span className="text-[#ffffff]/80 font-mono">{selectedMachine.vibration || 12} mm/s</span>
                         </div>
                         <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
                           <div 
@@ -588,7 +588,7 @@ export default function MachineMap({
                       <div className="flex-1">
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-white/80 font-mono text-[11px]">HYDRAULIC CRIMP PRESSURE</span>
-                          <span className="text-[#cac5cc]/80 font-mono">{selectedMachine.pressure || 0} psi</span>
+                          <span className="text-[#ffffff]/80 font-mono">{selectedMachine.pressure || 0} psi</span>
                         </div>
                         <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
                           <div 
@@ -603,11 +603,11 @@ export default function MachineMap({
                   {/* General Stats summary */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex flex-col">
-                      <span className="text-[10px] text-[#cac5cc]/60 uppercase font-mono font-semibold">Uptime Record</span>
+                      <span className="text-[10px] text-[#ffffff]/60 uppercase font-mono font-semibold">Uptime Record</span>
                       <span className="text-lg font-bold text-white font-mono mt-0.5">{selectedMachine.uptimeHours} hrs</span>
                     </div>
                     <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex flex-col">
-                      <span className="text-[10px] text-[#cac5cc]/60 uppercase font-mono font-semibold">Health Coefficient</span>
+                      <span className="text-[10px] text-[#ffffff]/60 uppercase font-mono font-semibold">Health Coefficient</span>
                       <span className={`text-lg font-bold font-mono mt-0.5 ${
                         selectedMachine.healthScore > 90 ? 'text-[#9cd2b8]' :
                         selectedMachine.healthScore > 75 ? 'text-[#f4bc59]' : 'text-[#ffb4ab]'
@@ -615,11 +615,11 @@ export default function MachineMap({
                     </div>
                   </div>
 
-                  <div className="border-t border-[#cac5cc]/10 my-1"></div>
+                  <div className="border-t border-[#ffffff]/10 my-1"></div>
 
                   {/* Operational Diagnostics */}
                   <div className="flex flex-col gap-2">
-                    <span className="text-[11px] font-mono text-[#cac5cc]/60 uppercase tracking-wider block">Operational Diagnostics</span>
+                    <span className="text-[11px] font-mono text-[#ffffff]/60 uppercase tracking-wider block">Operational Diagnostics</span>
                     <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 text-[11px] font-mono flex flex-col gap-1.5 text-white/70">
                       <div className="flex justify-between">
                         <span>Calibration protocol:</span>
@@ -640,7 +640,7 @@ export default function MachineMap({
                 <>
                   {/* Status interactive controllers */}
                   <div className="flex flex-col gap-4">
-                    <span className="text-[11px] font-mono text-[#cac5cc]/60 uppercase tracking-wider block">Change Node Registry</span>
+                    <span className="text-[11px] font-mono text-[#ffffff]/60 uppercase tracking-wider block">Change Node Registry</span>
 
                     <div className="flex flex-col gap-2">
                       <span className="text-xs text-white/80">Command Status Mode</span>
@@ -651,7 +651,7 @@ export default function MachineMap({
                           className={`py-2 px-3 text-xs rounded-xl flex items-center justify-center gap-2 font-semibold border cursor-pointer transition ${
                             selectedMachine.status === 'online' 
                               ? 'bg-[#9cd2b8]/10 text-[#9cd2b8] border-[#9cd2b8]' 
-                              : 'bg-[#1c1b1d] text-[#cac5cc]/70 border-white/5 hover:text-white'
+                              : 'bg-[#1c1b1d] text-[#ffffff]/70 border-white/5 hover:text-white'
                           }`}
                         >
                           <CheckCircle className="w-3.5 h-3.5" />
@@ -664,7 +664,7 @@ export default function MachineMap({
                           className={`py-2 px-3 text-xs rounded-xl flex items-center justify-center gap-2 font-semibold border cursor-pointer transition ${
                             selectedMachine.status === 'warning' 
                               ? 'bg-[#f4bc59]/10 text-[#f4bc59] border-[#f4bc59]' 
-                              : 'bg-[#1c1b1d] text-[#cac5cc]/70 border-white/5 hover:text-white'
+                              : 'bg-[#1c1b1d] text-[#ffffff]/70 border-white/5 hover:text-white'
                           }`}
                         >
                           <AlertTriangle className="w-3.5 h-3.5" />
@@ -677,7 +677,7 @@ export default function MachineMap({
                           className={`py-2 px-3 text-xs rounded-xl flex items-center justify-center gap-2 font-semibold border cursor-pointer transition ${
                             selectedMachine.status === 'offline' 
                               ? 'bg-[#ffb4ab]/10 text-[#ffb4ab] border-[#ffb4ab]' 
-                              : 'bg-[#1c1b1d] text-[#cac5cc]/70 border-white/5 hover:text-white'
+                              : 'bg-[#1c1b1d] text-[#ffffff]/70 border-white/5 hover:text-white'
                           }`}
                         >
                           <PowerOff className="w-3.5 h-3.5" />
@@ -690,7 +690,7 @@ export default function MachineMap({
                           className={`py-2 px-3 text-xs rounded-xl flex items-center justify-center gap-2 font-semibold border cursor-pointer transition ${
                             selectedMachine.status === 'maintenance' 
                               ? 'bg-[#cbc3d9]/20 text-[#cbc3d9] border-[#cbc3d9]' 
-                              : 'bg-[#1c1b1d] text-[#cac5cc]/70 border-white/5 hover:text-white'
+                              : 'bg-[#1c1b1d] text-[#ffffff]/70 border-white/5 hover:text-white'
                           }`}
                         >
                           <Settings className="w-3.5 h-3.5" />
@@ -699,14 +699,14 @@ export default function MachineMap({
                       </div>
                     </div>
 
-                    <div className="border-t border-[#cac5cc]/10 my-1"></div>
+                    <div className="border-t border-[#ffffff]/10 my-1"></div>
 
                     {/* Sensor parameters simulators */}
                     <div className="flex flex-col gap-3">
                       <span className="text-xs text-white/80">Telemetric Diagnostics Override</span>
 
                       <div>
-                        <div className="flex justify-between text-[11px] text-[#cac5cc]/70 mb-1">
+                        <div className="flex justify-between text-[11px] text-[#ffffff]/70 mb-1">
                           <span>Temperature Controller (°C)</span>
                           <span className="font-mono text-white">{selectedMachine.temp || 45}°C</span>
                         </div>
@@ -721,7 +721,7 @@ export default function MachineMap({
                       </div>
 
                       <div>
-                        <div className="flex justify-between text-[11px] text-[#cac5cc]/70 mb-1">
+                        <div className="flex justify-between text-[11px] text-[#ffffff]/70 mb-1">
                           <span>Vibration Spectrum (mm/s)</span>
                           <span className="font-mono text-white">{selectedMachine.vibration || 12} mm/s</span>
                         </div>
@@ -736,7 +736,7 @@ export default function MachineMap({
                       </div>
 
                       <div>
-                        <div className="flex justify-between text-[11px] text-[#cac5cc]/70 mb-1">
+                        <div className="flex justify-between text-[11px] text-[#ffffff]/70 mb-1">
                           <span>Sensor Health Index (%)</span>
                           <span className="font-mono text-white">{selectedMachine.healthScore}%</span>
                         </div>
@@ -756,8 +756,8 @@ export default function MachineMap({
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#cac5cc]/50">
-            <Cpu className="w-10 h-10 mb-3 text-[#cac5cc]/30 animate-pulse" />
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#ffffff]/50">
+            <Cpu className="w-10 h-10 mb-3 text-[#ffffff]/30 animate-pulse" />
             <h4 className="text-sm font-semibold text-white/80">No Node Selected</h4>
             <p className="text-xs max-w-[200px] mt-1 text-white/50">Click any machine marker point on the floor map to analyze telemetry metrics.</p>
           </div>

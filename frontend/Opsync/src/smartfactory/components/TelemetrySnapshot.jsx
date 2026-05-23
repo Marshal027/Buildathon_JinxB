@@ -50,7 +50,7 @@ export default function TelemetrySnapshot({ label, value, type, height = 70 }) {
       
       {/* Mini Title Grid */}
       <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 text-[#cac5cc]/60">
+        <div className="flex items-center gap-1.5 text-[#ffffff]/60">
           {theme.icon}
           <span className="font-mono text-[10px] tracking-wider uppercase font-semibold">{label}</span>
         </div>

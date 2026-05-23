@@ -10,7 +10,7 @@ from rest_framework import status
 from google import genai
 from google.genai import types
 
-from api.models import Machine, Ticket, LiveAlert, Attendance, WorkerLocation, ChatSession, ChatMessage
+from api.models import Machine, Ticket, LiveAlert, Attendance, WorkerLocation, ChatSession, ChatMessage, CameraFrame
 from api.serializers import (
     MachineSerializer, TicketSerializer, AttendanceSerializer,
     WorkerLocationSerializer, LiveAlertSerializer, ChatSessionSerializer
@@ -80,6 +80,20 @@ def me_view(req):
 @api_view(['GET'])
 def machines_list(req):
     machines = Machine.objects.all()
+    for m in machines:
+        if m.status != 'offline':
+            temp_delta = (random.random() - 0.48) * 1.8
+            vib_delta = (random.random() - 0.48) * 1.2
+            press_delta = random.randint(-2, 2)
+            health_delta = random.choice([-1, 0, 0, 0, 1]) if random.random() < 0.1 else 0
+            
+            m.temp = round(max(15.0, m.temp + temp_delta), 1)
+            m.vibration = round(max(0.1, m.vibration + vib_delta), 1)
+            if m.pressure > 0:
+                m.pressure = max(10, m.pressure + press_delta)
+            m.healthScore = max(10, min(100, m.healthScore + health_delta))
+            m.save()
+            
     serializer = MachineSerializer(machines, many=True)
     return Response(serializer.data)
 
@@ -260,6 +274,7 @@ def ticket_detail(req, id):
     serializer = TicketSerializer(ticket, data=req.data, partial=True)
     if serializer.is_valid():
         updated_ticket = serializer.save()
+        ws_broadcast('ticket.updated', TicketSerializer(updated_ticket).data)
         return Response(TicketSerializer(updated_ticket).data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -479,4 +494,58 @@ def chat_message_create(req):
         'response_text': ai_response_text,
         'severity': severity,
         'ticket_id': created_ticket_id
+    })
+
+
+# ─── Camera Frame Endpoints ──────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def camera_frame_upload(req):
+    """Receive a camera frame from the Expo mobile app."""
+    image = req.data.get('image')
+    if not image:
+        return Response({'error': 'No image data provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+    activity_score = float(req.data.get('activity_score', 0))
+    worker_count = int(req.data.get('worker_count', 0))
+    device_id = req.data.get('device_id', 'mobile-cam-01')
+
+    # Keep only the latest frame per device (delete old ones)
+    CameraFrame.objects.filter(deviceId=device_id).delete()
+    frame = CameraFrame.objects.create(
+        deviceId=device_id,
+        image=image,
+        activityScore=activity_score,
+        workerCount=worker_count,
+        timestamp=timezone.now()
+    )
+
+    # Broadcast to all connected web clients
+    ws_broadcast('camera.frame.update', {
+        'deviceId': device_id,
+        'activityScore': activity_score,
+        'workerCount': worker_count,
+        'timestamp': frame.timestamp.isoformat(),
+        # Don't include the full image in broadcast — clients will poll /api/camera/latest
+    })
+
+    return Response({'status': 'ok', 'timestamp': frame.timestamp.isoformat()})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def camera_latest_frame(req):
+    """Return the latest camera frame for the CCTV page."""
+    device_id = req.query_params.get('device_id', 'mobile-cam-01')
+    frame = CameraFrame.objects.filter(deviceId=device_id).order_by('-timestamp').first()
+    if not frame:
+        return Response({'status': 'no_frame'}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({
+        'deviceId': frame.deviceId,
+        'image': frame.image,
+        'activityScore': frame.activityScore,
+        'workerCount': frame.workerCount,
+        'timestamp': frame.timestamp.isoformat()
     })

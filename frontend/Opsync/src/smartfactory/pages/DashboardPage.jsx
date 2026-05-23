@@ -46,10 +46,10 @@ export default function DashboardPage({
     <div className="p-4 lg:p-6 flex flex-col gap-6 max-w-[1600px] mx-auto w-full select-none">
       
       {/* Banner / Header Bar */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-gradient-to-r from-[#141314] to-[#201f21] border border-[#cac5cc]/10 rounded-2xl gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-gradient-to-r from-[#141314] to-[#201f21] border border-[#ffffff]/10 rounded-2xl gap-4">
         <div>
           <h2 className="text-lg font-bold text-white tracking-tight uppercase">Plant Safety & KPI Executive Console</h2>
-          <p className="text-xs text-[#cac5cc]/60">Physical Operations geofenced metrics, AI sensor failure models, operator distress flags</p>
+          <p className="text-xs text-[#ffffff]/60">Physical Operations geofenced metrics, AI sensor failure models, operator distress flags</p>
         </div>
         
         <div className="flex items-center gap-3.5">
@@ -68,11 +68,11 @@ export default function DashboardPage({
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* KPI Card 1: Production efficiency */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#9cd2b8]/20 transition-all">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#9cd2b8]/20 transition-all">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#cac5cc]/60 uppercase tracking-widest font-mono">Production Yield</span>
+            <span className="text-[10px] text-[#ffffff]/60 uppercase tracking-widest font-mono">Production Yield</span>
             <span className="text-2xl font-bold font-mono text-white mt-1.5">{summary.productivity}%</span>
-            <span className="text-[9px] text-[#9cd2b8] font-semibold mt-1 flex items-center gap-0.5">▲ +1.4% from benchmark</span>
+            <span className="text-[9px] text-[#9cd2b8] font-semibold mt-1 flex items-center gap-0.5">▲ {summary.productivity > 93 ? '+' : ''}{(summary.productivity - 92.6).toFixed(1)}% from benchmark</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-[#2b292b] flex items-center justify-center text-[#9cd2b8] shrink-0 border border-white/5">
             <Zap className="w-5 h-5" />
@@ -80,11 +80,11 @@ export default function DashboardPage({
         </div>
 
         {/* KPI Card 2: Personnel Online */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#b0cbd8]/30 transition-all">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#b0cbd8]/30 transition-all">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#cac5cc]/60 uppercase tracking-widest font-mono">Fenced Operator Crew</span>
+            <span className="text-[10px] text-[#ffffff]/60 uppercase tracking-widest font-mono">Fenced Operator Crew</span>
             <span className="text-2xl font-bold font-mono text-white mt-1.5">{summary.personnelActive} active</span>
-            <span className="text-[9px] text-[#b0cbd8] font-semibold mt-1 flex items-center gap-0.5">● 100% attendance sweep</span>
+            <span className="text-[9px] text-[#b0cbd8] font-semibold mt-1 flex items-center gap-0.5">● {Math.round(summary.personnelActive / 1.3)}% attendance sweep</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-[#2b292b] flex items-center justify-center text-[#b0cbd8] shrink-0 border border-white/5">
             <Users className="w-5 h-5" />
@@ -92,11 +92,11 @@ export default function DashboardPage({
         </div>
 
         {/* KPI Card 3: Machine Status summary */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#cbc3d9]/20 transition-all">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#cbc3d9]/20 transition-all">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#cac5cc]/60 uppercase tracking-widest font-mono">Machine Telemetry Rate</span>
+            <span className="text-[10px] text-[#ffffff]/60 uppercase tracking-widest font-mono">Machine Telemetry Rate</span>
             <span className="text-2xl font-bold font-mono text-white mt-1.5">{summary.machinesOnline}/{summary.machinesTotal}</span>
-            <span className="text-[9px] text-[#cbc3d9] font-semibold mt-1">2 nodes flagged warning</span>
+            <span className="text-[9px] text-[#cbc3d9] font-semibold mt-1">{summary.machinesTotal - summary.machinesOnline} node{summary.machinesTotal - summary.machinesOnline !== 1 ? 's' : ''} flagged warning</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-[#2b292b] flex items-center justify-center text-[#cbc3d9] shrink-0 border border-white/5">
             <Cpu className="w-5 h-5" />
@@ -104,9 +104,9 @@ export default function DashboardPage({
         </div>
 
         {/* KPI Card 4: Open Defects tickets */}
-        <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#ffb4ab]/20 transition-all">
+        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[#ffb4ab]/20 transition-all">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#cac5cc]/60 uppercase tracking-widest font-mono">Fault Tickets Open</span>
+            <span className="text-[10px] text-[#ffffff]/60 uppercase tracking-widest font-mono">Fault Tickets Open</span>
             <span className="text-2xl font-bold font-mono text-white mt-1.5">{summary.openTickets} registered</span>
             <span className="text-[9px] text-[#ffb4ab] font-bold mt-1 flex items-center gap-1">
               ⚠️ {summary.criticalTickets} critical alert pending
@@ -177,7 +177,7 @@ export default function DashboardPage({
         <div className="flex flex-col gap-6">
           
           {/* Section: Live System Log Stream list */}
-          <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-4">
+          <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <span className="text-xs font-mono font-bold uppercase text-white tracking-widest flex items-center gap-1.5">
                 <Radio className="w-3.5 h-3.5 text-cyan-400" />
@@ -203,7 +203,7 @@ export default function DashboardPage({
           </div>
 
           {/* Section: Broadcast dispatcher console */}
-          <div className="p-5 bg-[#141314]/50 border border-[#cac5cc]/10 rounded-2xl flex flex-col gap-3">
+          <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-3">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">Safety Warning Broadcasting</h3>
             <p className="text-xs text-neutral-400">Transmits direct high-priority visual broadcast flashes across operator mobile terminals instantly</p>
             
