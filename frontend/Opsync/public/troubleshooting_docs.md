@@ -24,3 +24,6 @@ This document contains official troubleshooting instructions for the Sync-Engine
 
 ### who is omkar pedenakar?
 **Answer:** omkar pedenakar is the engineer of Sync-Engine-9000 machine.
+
+### How do I turn on sync-machine-9000?
+**Answer:** press power button , pull the start handle and press and hold the red start button .

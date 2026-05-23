@@ -33,16 +33,6 @@ export default function SideNavBar({
       </div>
 
       {/* Main Nav */}
-<<<<<<< HEAD
-      <div className="flex-1 flex flex-col gap-1 overflow-y-auto">
-        {currentUser.role !== 'engineer' && (
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-              activeTab === 'dashboard'
-                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
       <div className="flex-1 flex flex-col gap-0.5 overflow-y-auto">
         {currentUser.role !== 'engineer' && (
           <button
@@ -51,7 +41,6 @@ export default function SideNavBar({
               activeTab === 'dashboard'
                 ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                 : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
             }`}
           >
             <BarChart2 className="w-4 h-4 text-inherit" />
@@ -62,17 +51,10 @@ export default function SideNavBar({
         {currentUser.role !== 'engineer' && (
           <button
             onClick={() => setActiveTab('machine-health')}
-<<<<<<< HEAD
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-              activeTab === 'machine-health'
-                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-200 active:scale-95 text-left ${
               activeTab === 'machine-health'
                 ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                 : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
             }`}
           >
             <Cpu className="w-4 h-4 text-inherit" />
@@ -97,11 +79,7 @@ export default function SideNavBar({
         {currentUser.role !== 'engineer' && (
           <button
             onClick={() => setActiveTab('tickets')}
-<<<<<<< HEAD
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-=======
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-200 active:scale-95 text-left ${
->>>>>>> mrf
               activeTab === 'tickets'
                 ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                 : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
@@ -115,9 +93,6 @@ export default function SideNavBar({
           </button>
         )}
 
-<<<<<<< HEAD
-
-=======
         {currentUser.role !== 'engineer' && (
           <button
             onClick={() => setActiveTab('personnel')}
@@ -131,22 +106,14 @@ export default function SideNavBar({
             Personnel Roster
           </button>
         )}
->>>>>>> mrf
 
         {currentUser.role !== 'engineer' && (
           <button
             onClick={() => setActiveTab('mail-system')}
-<<<<<<< HEAD
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-              activeTab === 'mail-system'
-                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-200 active:scale-95 text-left ${
               activeTab === 'mail-system'
                 ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                 : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
             }`}
           >
             <Mail className="w-4 h-4 text-inherit" />
@@ -158,17 +125,10 @@ export default function SideNavBar({
           <>
             <button
               onClick={() => setActiveTab('editor')}
-<<<<<<< HEAD
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-                activeTab === 'editor'
-                  ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                  : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
               className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-200 active:scale-95 text-left ${
                 activeTab === 'editor'
                   ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                   : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
               }`}
             >
               <FileEdit className="w-4 h-4 text-inherit" />
@@ -176,17 +136,10 @@ export default function SideNavBar({
             </button>
             <button
               onClick={() => setActiveTab('cctv')}
-<<<<<<< HEAD
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-                activeTab === 'cctv'
-                  ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                  : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
               className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-200 active:scale-95 text-left ${
                 activeTab === 'cctv'
                   ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                   : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
               }`}
             >
               <Video className="w-4 h-4 text-inherit" />
@@ -194,15 +147,6 @@ export default function SideNavBar({
             </button>
           </>
         )}
-<<<<<<< HEAD
-        {currentUser.role !== 'engineer' && (
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 active:scale-95 text-left ${
-              activeTab === 'settings'
-                ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
-                : 'text-[#cac5cc]/70 hover:text-white hover:bg-[#9cd2b8]/5'
-=======
 
         {currentUser.role !== 'engineer' && (
           <button
@@ -211,7 +155,6 @@ export default function SideNavBar({
               activeTab === 'settings'
                 ? 'text-[#9cd2b8] bg-[#9cd2b8]/15 border-r-2 border-[#9cd2b8] font-bold shadow-[0_0_15px_rgba(156,210,184,0.1)]'
                 : 'text-[#ffffff]/70 hover:text-white hover:bg-[#9cd2b8]/5'
->>>>>>> mrf
             }`}
           >
             <SettingsIcon className="w-4 h-4 text-inherit" />

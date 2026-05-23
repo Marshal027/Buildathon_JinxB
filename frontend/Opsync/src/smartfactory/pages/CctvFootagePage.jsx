@@ -1,26 +1,15 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useRef } from 'react';
-import { Video, RefreshCw, Maximize2, ShieldAlert, Activity, Eye, Play, Square } from 'lucide-react';
-=======
 import React, { useState, useEffect } from 'react';
 import { Video, RefreshCw, Maximize2, ShieldAlert, Eye } from 'lucide-react';
->>>>>>> mrf
 
 export default function CctvFootagePage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCam, setSelectedCam] = useState(null);
   const [nightVision, setNightVision] = useState(true);
-<<<<<<< HEAD
-  const [noiseIntensity, setNoiseIntensity] = useState(1);
-=======
->>>>>>> mrf
   
   // Coordinates for simulated personnel tracking on CAM 02 (Room Locator)
   const [trackerPos, setTrackerPos] = useState({ x: 0.35, y: 0.65 });
   const [trackerLabel, setTrackerLabel] = useState('Near CNC-4');
 
-<<<<<<< HEAD
-=======
   // Mobile camera live feed state
   const [mobileFrame, setMobileFrame] = useState(null);
   const [isMobileOffline, setIsMobileOffline] = useState(true);
@@ -55,7 +44,6 @@ export default function CctvFootagePage() {
     return () => clearInterval(interval);
   }, []);
 
->>>>>>> mrf
   // Update clock
   useEffect(() => {
     const timer = setInterval(() => {
@@ -87,11 +75,6 @@ export default function CctvFootagePage() {
     return () => clearInterval(moveTimer);
   }, []);
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> mrf
   const formatDate = (date) => {
     return date.toISOString().slice(0, 10);
   };
@@ -105,8 +88,6 @@ export default function CctvFootagePage() {
     { id: 2, name: 'CAM 02 // GEOFENCED TRACKING (ROOM LOCATOR)', status: 'ACTIVE', fps: 15, activity: 'LOCATING', videoUrl: '/videos/make_another_one_but_the_room.mp4' },
     { id: 3, name: 'CAM 03 // ZONE C-2 (MAIN STORAGE)', status: 'ACTIVE', fps: 24, activity: 'LOW', videoUrl: '/videos/make_another_room_of_enginnere.mp4' },
     { id: 4, name: 'CAM 04 // ZONE B-1 (INSPECTION CELL)', status: 'ACTIVE', fps: 30, activity: 'HIGH', videoUrl: '/videos/mp_.mp4' },
-<<<<<<< HEAD
-=======
     { 
       id: 5, 
       name: 'CAM 05 // MOBILE SECURITY (LIVE PHONE FEED)', 
@@ -115,7 +96,6 @@ export default function CctvFootagePage() {
       activity: isMobileOffline ? 'STANDBY' : (mobileFrame?.activityScore > 65 ? 'HIGH' : 'DETECTING'),
       isMobile: true
     }
->>>>>>> mrf
   ];
 
   return (
@@ -143,20 +123,6 @@ export default function CctvFootagePage() {
           >
             NIGHT VISION: {nightVision ? 'ON (MONO)' : 'OFF (COLOR)'}
           </button>
-<<<<<<< HEAD
-
-          {/* Trigger manual refresh */}
-          <button
-            onClick={() => {
-              // Telemetry refresh indicator simulation
-            }}
-            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-white transition-all"
-            title="Refresh Feed Status"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-=======
->>>>>>> mrf
         </div>
       </div>
 
@@ -177,11 +143,6 @@ export default function CctvFootagePage() {
                 <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.07] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%]" />
               )}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> mrf
               {/* Night Vision Tint filter */}
               <div 
                 className={`absolute inset-0 pointer-events-none transition-colors duration-300 ${
@@ -219,11 +180,7 @@ export default function CctvFootagePage() {
 
               {/* Simulated Camera Video content */}
               <div className="flex-1 flex items-center justify-center relative overflow-hidden bg-black min-h-[180px]">
-<<<<<<< HEAD
-                {cam.fps > 0 && (
-=======
                 {cam.fps > 0 && !cam.isMobile && (
->>>>>>> mrf
                   <video
                     src={cam.videoUrl}
                     autoPlay
@@ -234,17 +191,6 @@ export default function CctvFootagePage() {
                   />
                 )}
 
-<<<<<<< HEAD
-                {cam.fps === 0 ? (
-                  <div className="flex flex-col items-center gap-2 z-10">
-                    <ShieldAlert className="w-10 h-10 text-red-500/80 animate-pulse" />
-                    <span className="font-mono text-xs font-semibold text-red-400">STANDBY // STANDDOWN</span>
-                    <span className="text-[10px] text-neutral-500 font-mono">feed deactivated by administrator</span>
-                  </div>
-                ) : cam.id === 2 ? (
-                  /* Camera 2: Live Room Locator position tracking representation */
-                  <div className="w-full h-full absolute inset-0 relative p-4 flex flex-col justify-between z-10 bg-transparent">
-=======
                 {cam.isMobile && !isMobileOffline && mobileFrame?.image && (
                   <img
                     src={mobileFrame.image}
@@ -302,7 +248,6 @@ export default function CctvFootagePage() {
                 ) : cam.id === 2 ? (
                   /* Camera 2: Live Room Locator position tracking representation */
                   <div className="w-full h-full absolute inset-0 p-4 flex flex-col justify-between z-10 bg-transparent">
->>>>>>> mrf
                     {/* Corner labels */}
                     <div className="absolute top-2 left-3 text-[8px] font-mono text-white/50 bg-black/45 px-1 rounded z-10">[0.0, 0.0]</div>
                     <div className="absolute top-2 right-3 text-[8px] font-mono text-white/50 bg-black/45 px-1 rounded z-10">[1.0, 0.0]</div>
@@ -385,8 +330,6 @@ export default function CctvFootagePage() {
           </div>
 
           <div className="flex flex-col gap-2 font-mono text-[11px]">
-<<<<<<< HEAD
-=======
             {!isMobileOffline && mobileFrame && (
               <div className="p-2.5 rounded-xl bg-cyan-950/20 border border-cyan-500/30 flex justify-between items-center text-xs animate-pulse">
                 <div className="flex items-center gap-2">
@@ -399,7 +342,6 @@ export default function CctvFootagePage() {
               </div>
             )}
 
->>>>>>> mrf
             <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex justify-between items-center text-xs">
               <div className="flex items-center gap-2">
                 <span className="text-[#9cd2b8]">[18:42:15]</span>

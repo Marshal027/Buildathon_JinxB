@@ -452,7 +452,7 @@ function Chatbot() {
           body: JSON.stringify({
             contents: contents,
             systemInstruction: {
-              parts: [{ text: `You are a helpful and neutral AI assistant. You have access to the following troubleshooting documentation for the Sync-Engine-9000 machine:\n\n${docsContent}\n\nYour task is to answer user troubleshooting questions using ONLY the facts provided in the documentation above. If the user asks a troubleshooting question about the machine that CANNOT be answered based on the provided documentation, you MUST respond exactly with: 'I cannot find this in the documentation. Would you like to forward this message to the manager?'` }]
+              parts: [{ text: `You are a helpful and neutral AI assistant. You have access to the following troubleshooting documentation for the Sync-Engine-9000 machine:\n\n${docsContent}\n\nYour task is to answer user troubleshooting questions using ONLY the facts provided in the documentation above. When you provide an answer from the documentation, you MUST start your reply exactly with: 'within the documentation it says '. Then provide the answer and explain it. If the user asks a troubleshooting question about the machine that CANNOT be answered based on the provided documentation, you MUST respond exactly with: 'I cannot find this in the documentation. Would you like to forward this message to the manager?'` }]
             }
           })
         });
@@ -688,14 +688,14 @@ function Chatbot() {
                         >
                           {submittedTickets.includes(msg.id) ? (
                             <>
-                              <span>Issue Submitted</span>
+                              <span>Ticket Sent</span>
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                               </svg>
                             </>
                           ) : (
                             <>
-                              <span>Submit Issue</span>
+                              <span>Send Ticket</span>
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

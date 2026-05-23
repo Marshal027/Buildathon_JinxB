@@ -23,6 +23,18 @@ export default function ChatPage({
   const [isListening, setIsListening] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [createdTicketMessageIds, setCreatedTicketMessageIds] = useState({});
+  const [isGeminiConnected, setIsGeminiConnected] = useState(navigator.onLine);
+  
+  useEffect(() => {
+    const handleOnline = () => setIsGeminiConnected(true);
+    const handleOffline = () => setIsGeminiConnected(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -224,91 +236,6 @@ export default function ChatPage({
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full p-4 lg:p-6 overflow-hidden max-w-[1600px] mx-auto w-full">
       
-<<<<<<< HEAD
-
-=======
-      {/* LEFT COLUMN: Predictive analytics array and ROI meters */}
-      <div className="w-full lg:w-96 flex flex-col gap-5 select-none overflow-y-auto shrink-0 pb-4 pr-1">
-        
-        {/* Module 1: AI Forecasting Gauges */}
-        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">AI Failure Prediction Models</h3>
-          </div>
-
-          <div className="flex flex-col gap-3.5">
-            
-            {/* Gauge 1: Extruder Alpha */}
-            <div className="p-3 bg-[#1c1b1d] border border-white/5 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">EX-02 Extruder Alpha</span>
-                <span className="text-[10px] font-mono font-bold text-[#b0cbd8] px-2 py-0.5 rounded bg-[#b0cbd8]/10 border border-[#b0cbd8]/20">12% Prob / Normal</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[12%] h-full bg-[#b0cbd8] rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Gauge 2: Conveyor Beta */}
-            <div className="p-3 bg-[#1e1919] border border-[#ffb4ab]/10 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">T-42 Conveyor Beta</span>
-                <span className="text-[10px] font-mono font-bold text-[#ffb4ab] px-2 py-0.5 rounded bg-red-950/20 border border-[#ffb4ab]/20 animate-pulse">78% Failure Risk / Critical</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[78%] h-full bg-[#ffb4ab] rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Gauge 3: Cooling Unit */}
-            <div className="p-3 bg-[#1c1b1d] border border-white/5 rounded-xl">
-              <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className="font-semibold text-white/90">CLS-042 Cooling Unit</span>
-                <span className="text-[10px] font-mono font-bold text-[#9cd2b8] px-2 py-0.5 rounded bg-[#9cd2b8]/10 border border-[#9cd2b8]/20">4% Prob / Stable</span>
-              </div>
-              <div className="w-full h-1.5 bg-[#2b292b] rounded-full overflow-hidden">
-                <div className="w-[4%] h-full bg-[#9cd2b8] rounded-full"></div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Module 2: ROI Analysis details */}
-        <div className="p-5 bg-gradient-to-br from-[#2a302a]/30 to-[#141514]/30 border border-[#9cd2b8]/20 rounded-2xl flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-[#9cd2b8]" />
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#9cd2b8]">Supervisory ROI Metrics</h3>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3.5 mt-1.5">
-            <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#ffffff]/60 uppercase block">Downtime Saved</span>
-              <span className="text-xl font-bold text-white font-mono mt-0.5">142.5 hrs</span>
-            </div>
-            <div className="p-3 bg-[#1c1b1d]/80 rounded-xl border border-[#9cd2b8]/10">
-              <span className="text-[10px] text-[#ffffff]/60 uppercase block">Est. Savings</span>
-              <span className="text-xl font-bold text-[#9cd2b8] font-mono mt-0.5">$428.5k</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-[#ffffff]/60 leading-relaxed mt-1">
-            Calculated dynamically against historical component diagnostics from integrated smart factory signals logs.
-          </p>
-        </div>
-
-        {/* Module 3: Active Telemetric Anomalies */}
-        <div className="p-5 bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl flex flex-col gap-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">Anomalous Activity Spectrum</span>
-          <div className="flex flex-col gap-2.5">
-            <div className="p-2.5 rounded-xl bg-red-950/15 border border-[#ffb4ab]/20 text-[11px] leading-relaxed text-[#ffb4ab]">
-              <strong>Conveyor Beta Temp Critical:</strong> Core bearing temp spiked to 82.3°C under load line. Immediate inspection dispatched.
-            </div>
-          </div>
-        </div>
-
-      </div>
->>>>>>> mrf
 
       {/* RIGHT COLUMN: AI Chatbot messaging arena */}
       <div className="flex-1 flex flex-col bg-[#141314]/50 border border-[#ffffff]/10 rounded-2xl overflow-hidden min-h-[460px]">
@@ -321,7 +248,10 @@ export default function ChatPage({
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">opp sync AI Assistant</h3>
-              <p className="text-[11px] text-[#ffffff]/60">Gemini-Powered Smart Diagnostic Diagnostic Desk</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className={`w-2 h-2 rounded-full ${isGeminiConnected ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]'}`}></span>
+                <p className="text-[11px] text-[#ffffff]/60">Gemini-Powered Smart Diagnostic Desk</p>
+              </div>
             </div>
           </div>
           
@@ -390,14 +320,14 @@ export default function ChatPage({
                       >
                         {msg.submitted ? (
                           <>
-                            <span>Issue Submitted</span>
+                            <span>Ticket Sent</span>
                             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                           </>
                         ) : (
                           <>
-                            <span>Submit Issue</span>
+                            <span>Send Ticket</span>
                             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                               <line x1="22" y1="2" x2="11" y2="13"></line>
                               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

@@ -117,6 +117,7 @@ export default function App() {
 
   // Active Critical SOS Alerts State
   const [activeSOS, setActiveSOS] = useState(null);
+  const [ticketSentPopup, setTicketSentPopup] = useState(false);
 
   // WebSocket Ref
   const wsRef = useRef(null);
@@ -505,15 +506,19 @@ export default function App() {
 
   const [docsContent, setDocsContent] = useState('');
 
-  // Fetch troubleshooting docs content when activeTab shifts (especially to chat)
   useEffect(() => {
-    fetch('/api/docs')
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch');
-        return res.json();
-      })
-      .then(data => setDocsContent(data.content))
-      .catch(err => console.error('Error fetching docs:', err));
+    // Mock documentation so Gemini has content to answer from
+    const mockDocs = `
+    ### What does a blinking red LED mean?
+    Answer: A blinking red LED indicates a database connection timeout. Check if the database instance is running and verify credentials.
+
+    ### How do I reboot the machine?
+    Answer: To reboot, press and hold the manual power button on the front panel for 5 seconds, or execute the command 'oppsynce restart' from the admin terminal.
+
+    ### What should I do if the disk is full?
+    Answer: Clean up log files by running the clean command: 'oppsynce clean-logs'. You can also configure log rotation in oppsynce.config.json.
+    `;
+    setDocsContent(mockDocs);
   }, [activeTab]);
 
   // Fallback local response generator when offline / Gemini API fails
@@ -622,13 +627,11 @@ export default function App() {
     };
     setLiveAlerts(prev => [newAlert, ...prev]);
 
-    // Active red visual flashing emergency banner at top of layout
-    setActiveSOS({
-      id: 'AI-Triage',
-      name: 'Worker AI Portal',
-      lat: 37.7749,
-      lng: -122.4194
-    });
+    // Show success popup instead of SOS
+    setTicketSentPopup(true);
+    setTimeout(() => {
+      setTicketSentPopup(false);
+    }, 4000);
   };
 
   // Chat agent submission using Gemini
@@ -661,7 +664,7 @@ export default function App() {
       });
 
       // Construct system instruction based on latest documentation
-      const systemInstructionText = `You are a helpful and neutral AI assistant. You have access to the following troubleshooting documentation for the Sync-Engine-9000 machine:\n\n${docsContent}\n\nYour task is to answer user troubleshooting questions using ONLY the facts provided in the documentation above. If the user asks a troubleshooting question about the machine that CANNOT be answered based on the provided documentation, you MUST respond exactly with: 'I cannot find this in the documentation. Would you like to forward this message to the manager?'`;
+      const systemInstructionText = `You are a helpful and neutral AI assistant. You have access to the following troubleshooting documentation for the Sync-Engine-9000 machine:\n\n${docsContent}\n\nYour task is to answer user troubleshooting questions using ONLY the facts provided in the documentation above. When you provide an answer from the documentation, you MUST start your reply exactly with: 'within the documentation it says '. First provide the direct answer from the documentation, and then explain the reasoning or provide more context. If the user asks a troubleshooting question about the machine that CANNOT be answered based on the provided documentation, you MUST respond exactly with: 'I cannot find this in the documentation. Would you like to forward this message to the manager?'`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -782,9 +785,6 @@ export default function App() {
           />
         );
       case 'personnel':
-<<<<<<< HEAD
-        return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Personnel Roster has been disabled.</div>;
-=======
         if (currentUser.role === 'engineer') {
           return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
         }
@@ -794,7 +794,6 @@ export default function App() {
             workerLocations={workerLocations}
           />
         );
->>>>>>> mrf
       case 'mail-system':
         if (currentUser.role === 'engineer') {
           return <div className="text-center p-10 font-bold text-[#ffb4ab]">Access Denied. Engineers do not have access to this page.</div>;
@@ -865,6 +864,26 @@ export default function App() {
                 className="text-xs font-bold bg-[#ba1a1a] hover:bg-[#93000a] text-white rounded-xl px-4 py-2 transition-all active:scale-95 shadow-md shadow-red-950 cursor-pointer"
               >
                 Acknowledge Alarm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ticket Sent Confirmation Popup */}
+      {ticketSentPopup && (
+        <div className="fixed top-20 right-6 left-6 md:left-auto md:w-[350px] bg-[#1c1b1d]/95 backdrop-blur-md border border-[#9cd2b8]/30 rounded-2xl shadow-[0_20px_50px_rgba(156,210,184,0.15)] z-[999] overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-[#9cd2b8] animate-fadeIn">
+          <div className="p-4 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#9cd2b8]/10 flex items-center justify-center shrink-0">
+                <Ticket className="w-4 h-4 text-[#9cd2b8]" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-white">Ticket Sent</h4>
+                <p className="text-[11px] text-[#ffffff]/60 mt-0.5 leading-relaxed">Your diagnostic issue has been successfully forwarded to the management dashboard.</p>
+              </div>
+              <button onClick={() => setTicketSentPopup(false)} className="text-[#ffffff]/50 hover:text-white p-1 cursor-pointer">
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
