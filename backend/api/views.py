@@ -1,6 +1,7 @@
 import os
 import math
 import random
+import json
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -442,7 +443,7 @@ def chat_message_create(req):
             contents.append(message)
 
             response = client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-1.5-flash',
                 contents=contents,
                 config=types.GenerateContentConfig(
                     system_instruction=system_instruction,
@@ -513,6 +514,38 @@ def camera_frame_upload(req):
 
     # Keep only the latest frame per device (delete old ones)
     CameraFrame.objects.filter(deviceId=device_id).delete()
+
+    # Attempt real AI detection if key is available
+    key = os.environ.get('GEMINI_API_KEY')
+    if key and key != 'MY_GEMINI_API_KEY' and image and ';base64,' in image:
+        try:
+            client = genai.Client(api_key=key)
+            parts = image.split(';base64,')
+            mime_type = parts[0].split('data:')[1]
+            base64_data = parts[1]
+            
+            prompt = (
+                "Count the number of people/workers visible in this factory CCTV frame. "
+                "Also estimate activity level (0-100) based on their engagement and movement. "
+                "Return ONLY a JSON object: {\"worker_count\": X, \"activity_score\": Y}"
+            )
+            
+            response = client.models.generate_content(
+                model='gemini-1.5-flash',
+                contents=[
+                    types.Part.from_bytes(data=bytes(base64_data, 'utf-8'), mime_type=mime_type),
+                    prompt
+                ],
+                config=types.GenerateContentConfig(response_mime_type='application/json')
+            )
+            
+            if response and response.text:
+                ai_data = json.loads(response.text)
+                worker_count = int(ai_data.get('worker_count', worker_count))
+                activity_score = float(ai_data.get('activity_score', activity_score))
+        except Exception as e:
+            print(f"AI Detection Error (Camera): {e}")
+
     frame = CameraFrame.objects.create(
         deviceId=device_id,
         image=image,

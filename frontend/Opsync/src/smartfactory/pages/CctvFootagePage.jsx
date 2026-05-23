@@ -135,8 +135,10 @@ export default function CctvFootagePage() {
               key={cam.id}
               className={`relative border rounded-2xl bg-[#080809] overflow-hidden flex flex-col justify-between ${
                 cam.fps === 0 ? 'border-red-950/40' : 'border-[#9cd2b8]/20'
-              } shadow-lg transition-all duration-300`}
-              style={{ minHeight: selectedCam ? '550px' : '280px' }}
+              } shadow-lg transition-all duration-300 ${
+                cam.id === 5 && !selectedCam ? 'lg:col-span-2' : ''
+              }`}
+              style={{ minHeight: (cam.id === 5 && !selectedCam) ? '480px' : (selectedCam ? '550px' : '280px') }}
             >
               {/* Scanlines Effect */}
               {cam.fps > 0 && (
@@ -226,22 +228,22 @@ export default function CctvFootagePage() {
                     <div className="absolute top-2 right-3 text-[8px] font-mono text-cyan-400 bg-black/45 px-1 rounded z-10">[CAM_05_MOBILE]</div>
 
                     {/* Detection analytics overlay at bottom */}
-                    <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1.5 font-mono text-[10px] bg-black/85 px-3 py-2 rounded-xl border border-[#9cd2b8]/20 backdrop-blur-sm pointer-events-none z-10">
+                    <div className="absolute bottom-4 right-4 w-48 flex flex-col gap-1 font-mono text-[8px] bg-black/85 px-2.5 py-1.5 rounded-lg border border-[#9cd2b8]/20 backdrop-blur-sm pointer-events-none z-10">
                       <div className="flex justify-between items-center">
-                        <span className="text-[#9cd2b8] font-bold animate-pulse">● DETECTING WORKER ACTIVITY</span>
-                        <span className="text-white text-[9px]">LUMINANCE_VARIANCE_MOTION</span>
+                        <span className="text-[#9cd2b8] font-bold animate-pulse">● DETECTING</span>
+                        <span className="text-white text-[7px] opacity-50">MOTION_V1</span>
                       </div>
                       
-                      <div className="h-1 bg-white/10 rounded-full overflow-hidden mt-0.5">
+                      <div className="h-0.5 bg-white/10 rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-cyan-400 transition-all duration-500" 
                           style={{ width: `${mobileFrame.activityScore}%` }}
                         />
                       </div>
 
-                      <div className="flex justify-between items-center text-[9px] text-[#cac5cc]/80 mt-0.5">
-                        <span>Workers Detected: <strong className="text-white text-xs">{mobileFrame.workerCount}</strong></span>
-                        <span>Activity level: <strong className="text-cyan-300">{mobileFrame.activityScore.toFixed(0)}%</strong></span>
+                      <div className="flex justify-between items-center text-[8px] text-[#cac5cc]/80">
+                        <span>Workers: <strong className="text-white">{mobileFrame.workerCount}</strong></span>
+                        <span>Activity: <strong className="text-cyan-300">{mobileFrame.activityScore.toFixed(0)}%</strong></span>
                       </div>
                     </div>
                   </div>

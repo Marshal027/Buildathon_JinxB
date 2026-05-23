@@ -37,27 +37,13 @@ export default function App() {
     }
   }, [permission]);
 
-  // Update simulated worker detection values to simulate live ML processing
+  // Remove simulated worker detection values to prevent hallucinations.
+  // Real detection now happens on the backend using Gemini 2.0 Flash.
   useEffect(() => {
-    let interval;
     if (isStreaming) {
-      interval = setInterval(() => {
-        // Dynamic worker fluctuation between 1 and 3
-        setDetectedWorkers(prev => {
-          const change = Math.random();
-          if (change < 0.15 && prev > 1) return prev - 1;
-          if (change > 0.85 && prev < 4) return prev + 1;
-          return prev;
-        });
-
-        // Dynamic activity score fluctuation
-        setActivityScore(prev => {
-          const change = (Math.random() - 0.5) * 20;
-          return Math.max(10, Math.min(100, Math.round(prev + change)));
-        });
-      }, 3000);
+      setDetectedWorkers(0);
+      setActivityScore(0);
     }
-    return () => clearInterval(interval);
   }, [isStreaming]);
 
   const startStreaming = () => {
@@ -149,7 +135,7 @@ export default function App() {
         clearInterval(streamIntervalRef.current);
       }
     };
-  }, [isStreaming, backendUrl, activityScore, detectedWorkers, frameCount]);
+  }, [isStreaming, backendUrl]);
 
   if (!permission) {
     return (
