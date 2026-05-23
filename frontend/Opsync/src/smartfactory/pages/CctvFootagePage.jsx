@@ -10,6 +10,40 @@ export default function CctvFootagePage() {
   const [trackerPos, setTrackerPos] = useState({ x: 0.35, y: 0.65 });
   const [trackerLabel, setTrackerLabel] = useState('Near CNC-4');
 
+  // Mobile camera live feed state
+  const [mobileFrame, setMobileFrame] = useState(null);
+  const [isMobileOffline, setIsMobileOffline] = useState(true);
+
+  // Poll for the latest mobile security camera frame
+  useEffect(() => {
+    const fetchLatestFrame = async () => {
+      try {
+        const response = await fetch('/api/camera/latest?device_id=mobile-cam-01');
+        if (response.ok) {
+          const data = await response.json();
+          setMobileFrame(data);
+          
+          // Check if the frame was updated within the last 15 seconds
+          const frameTime = new Date(data.timestamp);
+          const diffSeconds = (new Date() - frameTime) / 1000;
+          setIsMobileOffline(diffSeconds > 15);
+        } else {
+          setIsMobileOffline(true);
+        }
+      } catch (err) {
+        // Keep silent to avoid console noise during developer setups
+        setIsMobileOffline(true);
+      }
+    };
+
+    // Initial fetch
+    fetchLatestFrame();
+
+    // Poll every 2 seconds
+    const interval = setInterval(fetchLatestFrame, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Update clock
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,6 +88,14 @@ export default function CctvFootagePage() {
     { id: 2, name: 'CAM 02 // GEOFENCED TRACKING (ROOM LOCATOR)', status: 'ACTIVE', fps: 15, activity: 'LOCATING', videoUrl: '/videos/make_another_one_but_the_room.mp4' },
     { id: 3, name: 'CAM 03 // ZONE C-2 (MAIN STORAGE)', status: 'ACTIVE', fps: 24, activity: 'LOW', videoUrl: '/videos/make_another_room_of_enginnere.mp4' },
     { id: 4, name: 'CAM 04 // ZONE B-1 (INSPECTION CELL)', status: 'ACTIVE', fps: 30, activity: 'HIGH', videoUrl: '/videos/mp_.mp4' },
+    { 
+      id: 5, 
+      name: 'CAM 05 // MOBILE SECURITY (LIVE PHONE FEED)', 
+      status: isMobileOffline ? 'OFFLINE' : 'ACTIVE', 
+      fps: isMobileOffline ? 0 : 15, 
+      activity: isMobileOffline ? 'STANDBY' : (mobileFrame?.activityScore > 65 ? 'HIGH' : 'DETECTING'),
+      isMobile: true
+    }
   ];
 
   return (
@@ -138,7 +180,7 @@ export default function CctvFootagePage() {
 
               {/* Simulated Camera Video content */}
               <div className="flex-1 flex items-center justify-center relative overflow-hidden bg-black min-h-[180px]">
-                {cam.fps > 0 && (
+                {cam.fps > 0 && !cam.isMobile && (
                   <video
                     src={cam.videoUrl}
                     autoPlay
@@ -149,11 +191,59 @@ export default function CctvFootagePage() {
                   />
                 )}
 
+                {cam.isMobile && !isMobileOffline && mobileFrame?.image && (
+                  <img
+                    src={mobileFrame.image}
+                    alt="Mobile security live feed"
+                    className="absolute inset-0 w-full h-full object-cover opacity-75 z-0"
+                  />
+                )}
+
                 {cam.fps === 0 ? (
-                  <div className="flex flex-col items-center gap-2 z-10">
+                  <div className="flex flex-col items-center gap-2 z-10 text-center px-4">
                     <ShieldAlert className="w-10 h-10 text-red-500/80 animate-pulse" />
-                    <span className="font-mono text-xs font-semibold text-red-400">STANDBY // STANDDOWN</span>
-                    <span className="text-[10px] text-neutral-500 font-mono">feed deactivated by administrator</span>
+                    <span className="font-mono text-xs font-semibold text-red-400">
+                      {cam.isMobile ? 'STANDBY // NO MOBILE STREAM' : 'STANDBY // STANDDOWN'}
+                    </span>
+                    <span className="text-[10px] text-neutral-500 font-mono">
+                      {cam.isMobile 
+                        ? 'Launch the Expo smart security camera app on your phone to transmit live footage'
+                        : 'feed deactivated by administrator'}
+                    </span>
+                  </div>
+                ) : cam.isMobile && !isMobileOffline && mobileFrame ? (
+                  /* Camera 5: Mobile Phone Camera Feed Overlays */
+                  <div className="w-full h-full absolute inset-0 p-4 flex flex-col justify-between z-10 bg-transparent">
+                    {/* Simulated Camera Scan HUD overlay */}
+                    <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-25">
+                      {Array.from({ length: 9 }).map((_, i) => (
+                        <div key={i} className="border border-white/5" />
+                      ))}
+                    </div>
+
+                    {/* HUD corners */}
+                    <div className="absolute top-2 left-3 text-[8px] font-mono text-cyan-400 bg-black/45 px-1 rounded z-10">[STREAMING_OK]</div>
+                    <div className="absolute top-2 right-3 text-[8px] font-mono text-cyan-400 bg-black/45 px-1 rounded z-10">[CAM_05_MOBILE]</div>
+
+                    {/* Detection analytics overlay at bottom */}
+                    <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1.5 font-mono text-[10px] bg-black/85 px-3 py-2 rounded-xl border border-[#9cd2b8]/20 backdrop-blur-sm pointer-events-none z-10">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#9cd2b8] font-bold animate-pulse">● DETECTING WORKER ACTIVITY</span>
+                        <span className="text-white text-[9px]">LUMINANCE_VARIANCE_MOTION</span>
+                      </div>
+                      
+                      <div className="h-1 bg-white/10 rounded-full overflow-hidden mt-0.5">
+                        <div 
+                          className="h-full bg-cyan-400 transition-all duration-500" 
+                          style={{ width: `${mobileFrame.activityScore}%` }}
+                        />
+                      </div>
+
+                      <div className="flex justify-between items-center text-[9px] text-[#cac5cc]/80 mt-0.5">
+                        <span>Workers Detected: <strong className="text-white text-xs">{mobileFrame.workerCount}</strong></span>
+                        <span>Activity level: <strong className="text-cyan-300">{mobileFrame.activityScore.toFixed(0)}%</strong></span>
+                      </div>
+                    </div>
                   </div>
                 ) : cam.id === 2 ? (
                   /* Camera 2: Live Room Locator position tracking representation */
@@ -240,6 +330,18 @@ export default function CctvFootagePage() {
           </div>
 
           <div className="flex flex-col gap-2 font-mono text-[11px]">
+            {!isMobileOffline && mobileFrame && (
+              <div className="p-2.5 rounded-xl bg-cyan-950/20 border border-cyan-500/30 flex justify-between items-center text-xs animate-pulse">
+                <div className="flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">[CAM 05 LIVE]</span>
+                  <span className="text-white/90">
+                    Smart security camera streaming online. Detected {mobileFrame.workerCount} workers active with {mobileFrame.activityScore.toFixed(0)}% activity level.
+                  </span>
+                </div>
+                <span className="text-[#9cd2b8] text-[10px]">STREAMING_ON</span>
+              </div>
+            )}
+
             <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex justify-between items-center text-xs">
               <div className="flex items-center gap-2">
                 <span className="text-[#9cd2b8]">[18:42:15]</span>

@@ -81,3 +81,13 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.role}: {self.content[:30]}"
+
+class CameraFrame(models.Model):
+    deviceId = models.CharField(max_length=100, default='mobile-cam-01')
+    image = models.TextField()  # base64 encoded JPEG
+    activityScore = models.FloatField(default=0.0)  # 0-100 motion activity percentage
+    workerCount = models.IntegerField(default=0)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Frame from {self.deviceId} at {self.timestamp}"
